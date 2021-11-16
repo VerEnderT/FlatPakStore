@@ -14,9 +14,9 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menübars
         self.testbutton = "0"
         self.awalt = 0
         self.awneu = 0
-        self.gameslist = ["Super Tux Kart", "0 A.D."]
-        self.coverpm = ["./SuperTuxKart.jpg", "./nullad.jpg"]
-        self.videoadr = ["ef9vYcuEDL4", "D3vxXZygHIk"]
+        self.gameslist = ["Super Tux Kart", "0 A.D.", "Minecraft"]
+        self.coverpm = ["./SuperTuxKart.jpg", "./nullad.jpg", "./minecraft.jpg"]
+        self.videoadr = ["ef9vYcuEDL4", "D3vxXZygHIk", "0maWbr0FHKY"]
         self.yt1 = "http://www.youtube.com/embed/"
         self.yt2 = "?autoplay=1&showinfo=0&controls=0&loop=1&playlist="
         self.fileurl = self.yt1 + self.videoadr[0] + self.yt2 + self.videoadr[0]
@@ -33,7 +33,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menübars
                              "zählt der Aufbau einer Wirtschafts- und Kriegsproduktion zur anschließenden Bekämpfung " +
                              "der Gegner. Die im Spiel enthaltenen Zivilisationen und Technologien sind in etwa von " +
                              "der realen historischen Entwicklung der Antike in den Jahren 500 bis 1 vor Christus " +
-                             "beeinflusst. "]
+                             "beeinflusst. ", "spielen mit klötzchen und noch ganz viel meer "]
 
         # Hintergrund
         image = QPixmap("./background.gif")
@@ -79,7 +79,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menübars
         self.btext.setReadOnly(True)
         self.btext.setMinimumWidth(430)
         self.btext.setMinimumHeight(280)
-        self.btext.setText(self.beschreibung[1])
+        self.btext.setText(self.beschreibung[0])
         self.btext.move(170, 300)
         self.btext.setStyleSheet("background: rgba(0, 0, 0, 140); color: #ffffff;")
 
@@ -103,10 +103,10 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menübars
         for i in self.gameslist:
             self.gamebtn = QPushButton(self)
             self.gamebtn.setText(self.gameslist[self.count])
-            self.gamebtn.move(50, 150 + self.count * 30)
+            self.gamebtn.move(50, 150 + self.count * 35)
             self.aobjectname = str(self.count)
             self.gamebtn.setObjectName(self.aobjectname)
-            self.count = +1
+            self.count = self.count + 1
             self.gamebtn.clicked.connect(self.awknopf)
             print(i)
 
