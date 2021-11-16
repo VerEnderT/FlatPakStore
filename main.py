@@ -14,26 +14,44 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menübars
         self.testbutton = "0"
         self.awalt = 0
         self.awneu = 0
-        self.gameslist = ["Super Tux Kart", "0 A.D.", "Minecraft"]
-        self.coverpm = ["./SuperTuxKart.jpg", "./nullad.jpg", "./minecraft.jpg"]
-        self.videoadr = ["ef9vYcuEDL4", "D3vxXZygHIk", "0maWbr0FHKY"]
+        self.gameslist = []
+        self.coverpm = []
+        self.videoadr = []
         self.yt1 = "http://www.youtube.com/embed/"
-        self.yt2 = "?autoplay=1&showinfo=0&controls=0&loop=1&playlist="
-        self.fileurl = self.yt1 + self.videoadr[0] + self.yt2 + self.videoadr[0]
-        self.beschreibung = ["Karts. Nitro. Action! \n\nSuperTuxKart ist ein 3D-Open-Source-Arcade-Racer mit einer " +
-                             "Vielzahl von Charakteren, Strecken und Spielmodi. \n" +
-                             "Im Story-Modus musst du dich dem bösen Nolok stellen und ihn" +
-                             "besiegen, um das Maskottchen-Königreich wieder sicher zu machen! Sie können alleine " +
-                             "gegen den Computer antreten, an mehreren Grand-Prix-Pokalen teilnehmen oder versuchen, " +
-                             "Ihre schnellste Zeit im Zeitfahrmodus zu schlagen. Sie können auch mit bis zu acht " +
-                             "Freunden auf einem einzigen Computer Rennen fahren oder kämpfen, in einem lokalen " +
-                             "Netzwerk spielen oder online mit anderen Spielern auf der ganzen Welt spielen. ",
-                             "0 A.D. (kurz für Jahr null Anno Domini) ist ein kontinuierlich weiterentwickeltes " +
-                             "freies Echtzeit-Strategiespiel von Wildfire Games. Zu den Schwerpunkten des Spiels " +
-                             "zählt der Aufbau einer Wirtschafts- und Kriegsproduktion zur anschließenden Bekämpfung " +
-                             "der Gegner. Die im Spiel enthaltenen Zivilisationen und Technologien sind in etwa von " +
-                             "der realen historischen Entwicklung der Antike in den Jahren 500 bis 1 vor Christus " +
-                             "beeinflusst. ", "spielen mit klötzchen und noch ganz viel meer "]
+        self.yt2 = "?autoplay=1&showinfo=0&loop=1&playlist="
+        self.fileurl = self.yt1 + "ef9vYcuEDL4" + self.yt2 + "ef9vYcuEDL4"
+        self.beschreibung = []
+
+        # Using readline()
+        file1 = open('spieldaten.data', 'r')
+        count = 0
+
+        while True:
+            count += 1
+            line = file1.readline()
+            if not line:
+                break
+
+            self.gameslist.append(line[0 : len(line)-1])
+            print("Line{}: {}".format(count, line.strip()))
+            line = file1.readline()
+            if not line:
+                break
+            self.coverpm.append(line[0:len(line)-1])
+            print("Line{}: {}".format(count, line.strip()))
+            line = file1.readline()
+            if not line:
+                break
+            self.videoadr.append(line[0:len(line)-1])
+            print("Line{}: {}".format(count, line.strip()))
+            line = file1.readline()
+            if not line:
+                break
+            self.beschreibung.append(line[0:len(line)-1])
+            print("Line{}: {}".format(count, line.strip()))
+
+            count += 1
+        file1.close()
 
         # Hintergrund
         image = QPixmap("./background.gif")
