@@ -78,7 +78,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         background.setScaledContents(True)
         background.move(0, 0)
 
-        # webkit test
+        # Youtube Video
         self.webview = QWebEngineView(self)
         self.webview.setUrl(QUrl(self.fileurl))
         self.webview.setMinimumWidth(400)
@@ -120,15 +120,15 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         # Installieren Button
         self.btn_install = QPushButton(self)
         self.btn_install.setText("Installieren")
-        self.btn_install.move(700, 500)
+        self.btn_install.move(650, 520)
         self.btn_install.setObjectName("2")
-        # self.btn_install.clicked.connect(self.knopf)
-        self.btn_install.setMinimumWidth(200)
+        self.btn_install.clicked.connect(self.installieren)
+        self.btn_install.setMinimumWidth(300)
         self.btn_install.setMinimumHeight(50)
         self.btn_install.setStyleSheet(
             "border: 4px solid '#f0f0f0';" +
             "background: #0eff2a;" +
-            "border-radius: 20px;" +
+            "border-radius: 25px;" +
             "font-size: 35px;" +
             "color: #ffffff;"
         )
@@ -140,22 +140,42 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         # De-Installieren Button
         self.btn_deinstall = QPushButton(self)
         self.btn_deinstall.setText("De-Installieren")
-        self.btn_deinstall.move(650, 500)
+        self.btn_deinstall.move(700, 480)
         self.btn_deinstall.setObjectName("2")
-        # self.btn_install.clicked.connect(self.knopf)
-        self.btn_deinstall.setMinimumWidth(300)
-        self.btn_deinstall.setMinimumHeight(50)
+        self.btn_deinstall.clicked.connect(self.deinstallieren)
+        self.btn_deinstall.setMinimumWidth(200)
+        self.btn_deinstall.setMinimumHeight(30)
         self.btn_deinstall.setStyleSheet(
             "border: 4px solid '#f0f0f0';" +
             "background: #aa0000;" +
-            "border-radius: 20px;" +
-            "font-size: 35px;" +
+            "border-radius: 15px;" +
+            "font-size: 20px;" +
             "color: #ffffff;"
         )
         if self.appisinstall[self.awneu] == 1:
             self.btn_deinstall.hide()
         else:
             self.btn_deinstall.show()
+
+        # Starten Button
+        self.btn_start = QPushButton(self)
+        self.btn_start.setText("Starten")
+        self.btn_start.move(650, 520)
+        self.btn_start.setObjectName("2")
+        self.btn_start.clicked.connect(self.starten)
+        self.btn_start.setMinimumWidth(300)
+        self.btn_start.setMinimumHeight(50)
+        self.btn_start.setStyleSheet(
+            "border: 4px solid '#f0f0f0';" +
+            "background: #0eff2a;" +
+            "border-radius: 25px;" +
+            "font-size: 35px;" +
+            "color: #ffffff;"
+        )
+        if self.appisinstall[self.awneu] == 1:
+            self.btn_start.hide()
+        else:
+            self.btn_start.show()
 
         # Applist Buttons
         self.count = 0
@@ -174,7 +194,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         # konfiguration Fenster und zeigen
         self.setGeometry(0 + 50, 50, 1000, 600)  # x-pos, y-pos, breite, höhe
         self.setWindowTitle("VerFlatpakT")  # Title name
-        self.setWindowIcon(QIcon("VETlogo.png"))  # Datei für das logo des programms
+        self.setWindowIcon(QIcon("VerLinuxT-logo.png"))  # Datei für das logo des programms
         self.setFixedSize(1000, 600)  # fixe größe einstellen
         self.show()  # Fenster anzeigen
 
@@ -194,9 +214,62 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         if self.appisinstall[self.awneu] == 0:
             self.btn_install.hide()
             self.btn_deinstall.show()
+            self.btn_start.show()
         else:
             self.btn_install.show()
+            self.btn_start.hide()
             self.btn_deinstall.hide()
+
+    def installieren(self):
+        try:
+            s = subprocess.call(['flatpak', 'install', self.appcom[self.awneu], '-y'])
+            print("wird installiert")
+            print(s)
+        except:
+            print("fehler aufgetretten")
+
+        s = subprocess.call(['flatpak', 'info', self.appcom[self.awneu]])
+        if s == 0:
+            self.appisinstall[self.awneu] = 0
+            print("ist installiert!")
+        else:
+            self.appisinstall[self.awneu] = 1
+            print("ist nicht installiert")
+        self.gamechange()
+
+    def deinstallieren(self):
+        try:
+            s = subprocess.call(['flatpak', 'uninstall', self.appcom[self.awneu], '-y'])
+            print("wird deinstalliert")
+            print(s)
+        except:
+            print("fehler aufgetretten")
+
+        s = subprocess.call(['flatpak', 'info', self.appcom[self.awneu]])
+        if s == 0:
+            self.appisinstall[self.awneu] = 0
+            print("ist installiert!")
+        else:
+            self.appisinstall[self.awneu] = 1
+            print("ist nicht installiert")
+        self.gamechange()
+
+    def starten(self):
+        try:
+            s = subprocess.call(['flatpak', 'run', self.appcom[self.awneu], '-y'])
+            print("wird gestartet")
+            print(s)
+        except:
+            print("fehler aufgetretten")
+
+        s = subprocess.call(['flatpak', 'info', self.appcom[self.awneu]])
+        if s == 0:
+            self.appisinstall[self.awneu] = 0
+            print("ist installiert!")
+        else:
+            self.appisinstall[self.awneu] = 1
+            print("ist nicht installiert")
+        self.gamechange()
 
 
 app = QApplication(sys.argv)
