@@ -1,5 +1,5 @@
 import sys
-# import subprocess
+import subprocess
 # import pathlib
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -15,15 +15,17 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.testbutton = "0"
         self.awalt = 0
         self.awneu = 0
-        self.gameslist = []
+        self.applist = []
+        self.appisinstall = []
         self.coverpm = []
         self.videoadr = []
+        self.beschreibung = []
+        self.appcom = []
         self.yt1 = "http://www.youtube.com/embed/"
         self.yt2 = "?autoplay=1&showinfo=0&loop=1&playlist="
         self.fileurl = self.yt1 + "ef9vYcuEDL4" + self.yt2 + "ef9vYcuEDL4"
-        self.beschreibung = []
 
-        # Appdaten einlesen
+# ------------- Appdaten einlesen ------------------------------------------------------------
         file1 = open('appdaten.data', 'r')
         count = 0
 
@@ -33,7 +35,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             if not line:
                 break
 
-            self.gameslist.append(line[0 : len(line)-1])
+            self.applist.append(line[0: len(line)-1])
             print("Line{}: {}".format(count, line.strip()))
             line = file1.readline()
             if not line:
@@ -50,9 +52,22 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
                 break
             self.beschreibung.append(line[0:len(line)-1])
             print("Line{}: {}".format(count, line.strip()))
+            line = file1.readline()
+            if not line:
+                break
+            self.appcom.append(line[0:len(line)-1])
+            print("Line{}: {}".format(count, line.strip()))
 
+            s = subprocess.call(['flatpak', 'info', line[0:len(line)-1]])
+            self.appisinstall.append(s)
+            if s == 0:
+                print("ist installiert!")
+            else:
+                print("ist nicht installiert")
             count += 1
         file1.close()
+
+# --------------------------------------------------------------------------------------------
 
         # Hintergrund
         image = QPixmap("./background.gif")
@@ -117,11 +132,36 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             "font-size: 35px;" +
             "color: #ffffff;"
         )
-        self.count = 0
+        if self.appisinstall[self.awneu] == 0:
+            self.btn_install.hide()
+        else:
+            self.btn_install.show()
 
-        for i in self.gameslist:
+        # De-Installieren Button
+        self.btn_deinstall = QPushButton(self)
+        self.btn_deinstall.setText("De-Installieren")
+        self.btn_deinstall.move(650, 500)
+        self.btn_deinstall.setObjectName("2")
+        # self.btn_install.clicked.connect(self.knopf)
+        self.btn_deinstall.setMinimumWidth(300)
+        self.btn_deinstall.setMinimumHeight(50)
+        self.btn_deinstall.setStyleSheet(
+            "border: 4px solid '#f0f0f0';" +
+            "background: #aa0000;" +
+            "border-radius: 20px;" +
+            "font-size: 35px;" +
+            "color: #ffffff;"
+        )
+        if self.appisinstall[self.awneu] == 1:
+            self.btn_deinstall.hide()
+        else:
+            self.btn_deinstall.show()
+
+        # Applist Buttons
+        self.count = 0
+        for i in self.applist:
             self.gamebtn = QPushButton(self)
-            self.gamebtn.setText(self.gameslist[self.count])
+            self.gamebtn.setText(self.applist[self.count])
             self.gamebtn.move(50, 150 + self.count * 35)
             self.aobjectname = str(self.count)
             self.gamebtn.setObjectName(self.aobjectname)
@@ -146,11 +186,17 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.gamechange()
 
     def gamechange(self):
-        self.gamename.setText(self.gameslist[self.awneu])
+        self.gamename.setText(self.applist[self.awneu])
         self.cover.setPixmap(QPixmap(self.coverpm[self.awneu]))
         self.btext.setText(self.beschreibung[self.awneu])
         self.fileurl = self.yt1 + self.videoadr[self.awneu] + self.yt2 + self.videoadr[self.awneu]
         self.webview.setUrl(QUrl(self.fileurl))
+        if self.appisinstall[self.awneu] == 0:
+            self.btn_install.hide()
+            self.btn_deinstall.show()
+        else:
+            self.btn_install.show()
+            self.btn_deinstall.hide()
 
 
 app = QApplication(sys.argv)
