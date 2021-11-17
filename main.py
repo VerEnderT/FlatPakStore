@@ -1,3 +1,4 @@
+import time
 import sys
 import subprocess
 # import pathlib
@@ -77,6 +78,15 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         background.setFixedHeight(700)
         background.setScaledContents(True)
         background.move(0, 0)
+
+        # logo
+        image = QPixmap("VerLinuxT-logo.png")
+        logo = QLabel(self)
+        logo.setPixmap(image)
+        logo.setFixedWidth(300)
+        logo.setFixedHeight(300)
+        logo.setScaledContents(True)
+        logo.move(-20, 450)
 
         # Youtube Video
         self.webview = QWebEngineView(self)
@@ -189,6 +199,23 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             self.gamebtn.clicked.connect(self.awknopf)
             print(i)
 
+        # Label Status
+        self.stAnzeige = QLabel(self)
+        self.stAnzeige.setMinimumWidth(800)
+        self.stAnzeige.setMinimumHeight(100)
+        self.stAnzeige.setText("Es wird Installiert ...")
+        self.stAnzeige.move(100, 240)
+        self.stAnzeige.hide()
+        self.stAnzeige.setAlignment(Qt.AlignCenter)
+        self.stAnzeige.setStyleSheet(
+            "background: rgba(0, 200, 0, 150);" +
+            "font-size: 68px;" +
+            "color: #00e500;" +
+            "border: 4px solid '#f0f0f0';" +
+            "border-radius: 50px;" +
+            "color: #ffffff;"
+        )
+
 # ---------------------------------------------------------------------------------------------
 
         # konfiguration Fenster und zeigen
@@ -221,6 +248,11 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             self.btn_deinstall.hide()
 
     def installieren(self):
+        self.stAnzeige.show()
+        self.stAnzeige.setText("Es wird installiert ...")
+        time.sleep(3)
+        for i in range(10000):
+            print(i)
         try:
             s = subprocess.call(['flatpak', 'install', self.appcom[self.awneu], '-y'])
             print("wird installiert")
@@ -236,8 +268,12 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             self.appisinstall[self.awneu] = 1
             print("ist nicht installiert")
         self.gamechange()
+        self.stAnzeige.hide()
 
     def deinstallieren(self):
+        self.stAnzeige.setText("Es wird deinstalliert...")
+        self.stAnzeige.show()
+        time.sleep(3)
         try:
             s = subprocess.call(['flatpak', 'uninstall', self.appcom[self.awneu], '-y'])
             print("wird deinstalliert")
@@ -253,6 +289,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             self.appisinstall[self.awneu] = 1
             print("ist nicht installiert")
         self.gamechange()
+        self.stAnzeige.hide()
 
     def starten(self):
         try:
