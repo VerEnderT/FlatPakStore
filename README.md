@@ -1,5 +1,19 @@
 # FlatPakStore
 Neuer Flatpak Store in Deutsch
 
-Videos werden nicht mit hochgeladen
-künftig wird auch versucht diese von youtube einzubinden
+mit Videos zu den Apps direkt aus youtube
+
+.
+
+to do ...
+installations abfrage
+
+installations prozess
+
+Bilder aus dem internet einbinden ohne speicher in der app zu belasten.
+
+kategorien 
+
+Anordnung und styling verbessern
+
+code optimieren
