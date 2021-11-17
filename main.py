@@ -23,8 +23,8 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.fileurl = self.yt1 + "ef9vYcuEDL4" + self.yt2 + "ef9vYcuEDL4"
         self.beschreibung = []
 
-        # Using readline()
-        file1 = open('spieldaten.data', 'r')
+        # Appdaten einlesen
+        file1 = open('appdaten.data', 'r')
         count = 0
 
         while True:
