@@ -8,7 +8,7 @@ from PyQt5.QtCore import *
 # from PyQt5.QtMultimedia import QMediaContent
 
 
-class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menübars
+class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
     def __init__(self):
         super().__init__()
 
@@ -132,7 +132,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menübars
 # ---------------------------------------------------------------------------------------------
 
         # konfiguration Fenster und zeigen
-        self.setGeometry(1280 + 50, 50, 1000, 600)  # x-pos, y-pos, breite, höhe
+        self.setGeometry(0 + 50, 50, 1000, 600)  # x-pos, y-pos, breite, höhe
         self.setWindowTitle("VerFlatpakT")  # Title name
         self.setWindowIcon(QIcon("VETlogo.png"))  # Datei für das logo des programms
         self.setFixedSize(1000, 600)  # fixe größe einstellen
