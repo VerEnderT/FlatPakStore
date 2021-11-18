@@ -11,7 +11,10 @@ from PyQt5.QtCore import *
 class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
     def __init__(self):
         super().__init__()
-
+        self.appcategorie = []
+        self.appcpath = []
+        self.apppage = 0
+        self.appcselect = 0
         self.appmenge = 0
         self.testbutton = "0"
         self.awalt = 0
@@ -25,6 +28,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.yt2 = "?autoplay=1&showinfo=0&loop=1&playlist="
         self.fileurl = self.yt1 + "ef9vYcuEDL4" + self.yt2 + "ef9vYcuEDL4"
         cpath = os.path.dirname(os.path.abspath(__file__))
+        self.catseinlesen()
         self.appseinlesen()
 
         # Hintergrund
@@ -148,6 +152,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
 
         self.btn_start.hide()
         self.appbtnmake()
+        self.catbtnmake()
 
         # Label Status
         self.stAnzeige = QLabel(self)
@@ -247,14 +252,12 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.i = 0
         self.timer.start(1000, self)
 
-
-
-
-
 # ------------- Appdaten einlesen ------------------------------------------------------------
     def appseinlesen(self):
         cpath = os.path.dirname(os.path.abspath(__file__))
-        file1 = open(cpath + "/games.data", 'r')
+        catpath = self.appcpath[self.appcselect]
+        print(catpath)
+        file1 = open(catpath, 'r')
         count = 0
         while True:
             line = file1.readline()
@@ -301,6 +304,40 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             self.count = self.count + 1
             print(i)
 
+    def catseinlesen(self):
+        cpath = os.path.dirname(os.path.abspath(__file__))
+        print("cat " + cpath)
+        file1 = open(cpath + "/data/categorie.data", 'r')
+        count = 0
+        while True:
+            line = file1.readline()
+            if not line:
+                break
+
+            self.appcategorie.append(line[0: len(line) - 1])
+            print("sLine{}: {}".format(count, line.strip()))
+            line = file1.readline()
+            if not line:
+                break
+            self.appcpath.append(cpath +"/data/" + line[0:len(line) - 1])
+            print("Line{}: {}".format(count, line.strip()))
+            print(self.appcpath[count])
+            count += 1
+        file1.close()
+
+
+        # Applist Buttons
+    def catbtnmake(self):
+        self.count = 0
+        for i in self.appcategorie:
+            self.btn_cat = QPushButton(self)
+            self.btn_cat.setText(self.appcategorie[self.count])
+            self.btn_cat.move(10+ self.count * 55, 5 )
+            self.cobjectname = str(self.count)
+            self.btn_cat.setObjectName(self.aobjectname)
+            #self.btn_cat.clicked.connect(self.cwknopf)
+            self.count = self.count + 1
+            print(i)
 # --------------------------------------------------------------------------------------------
 
 
