@@ -16,7 +16,6 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.awalt = 0
         self.awneu = 0
         self.applist = []
-        self.appisinstall = []
         self.coverpm = []
         self.videoadr = []
         self.beschreibung = []
@@ -24,50 +23,8 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.yt1 = "http://www.youtube.com/embed/"
         self.yt2 = "?autoplay=1&showinfo=0&loop=1&playlist="
         self.fileurl = self.yt1 + "ef9vYcuEDL4" + self.yt2 + "ef9vYcuEDL4"
-
-# ------------- Appdaten einlesen ------------------------------------------------------------
         cpath = os.path.dirname(os.path.abspath(__file__))
-        file1 = open(cpath + "/appdaten.data", 'r')
-        count = 0
-        while True:
-            count += 1
-            line = file1.readline()
-            if not line:
-                break
-
-            self.applist.append(line[0: len(line)-1])
-            print("Line{}: {}".format(count, line.strip()))
-            line = file1.readline()
-            if not line:
-                break
-            self.coverpm.append(cpath + line[0:len(line)-1])
-            print("Line{}: {}".format(count, line.strip()))
-            line = file1.readline()
-            if not line:
-                break
-            self.videoadr.append(line[0:len(line)-1])
-            print("Line{}: {}".format(count, line.strip()))
-            line = file1.readline()
-            if not line:
-                break
-            self.beschreibung.append(line[0:len(line)-1])
-            print("Line{}: {}".format(count, line.strip()))
-            line = file1.readline()
-            if not line:
-                break
-            self.appcom.append(line[0:len(line)-1])
-            print("Line{}: {}".format(count, line.strip()))
-
-            s = subprocess.call(['flatpak', 'info', line[0:len(line)-1]])
-            self.appisinstall.append(s)
-            if s == 0:
-                print("ist installiert!")
-            else:
-                print("ist nicht installiert")
-            count += 1
-        file1.close()
-
-# --------------------------------------------------------------------------------------------
+        self.appseinlesen()
 
         # Hintergrund
         image = QPixmap(cpath + "/background.gif")
@@ -113,13 +70,13 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.cover.move(620, 25)
 
         # Label Spielname
-        self.gamename = QTextEdit(self)
-        self.gamename.setReadOnly(True)
-        self.gamename.setMinimumWidth(400)
-        self.gamename.setMinimumHeight(100)
-        self.gamename.setText("Super TuX Kart")
-        self.gamename.move(185, 240)
-        self.gamename.setStyleSheet(
+        self.appname = QTextEdit(self)
+        self.appname.setReadOnly(True)
+        self.appname.setMinimumWidth(400)
+        self.appname.setMinimumHeight(100)
+        self.appname.setText("Super TuX Kart")
+        self.appname.move(185, 240)
+        self.appname.setStyleSheet(
             "background: rgba(0, 0, 0, 0);" +
             "font-size: 35px;" +
             "color: #ffffff;"
@@ -149,10 +106,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             "font-size: 35px;" +
             "color: #ffffff;"
         )
-        if self.appisinstall[self.awneu] == 0:
-            self.btn_install.hide()
-        else:
-            self.btn_install.show()
+        self.btn_install.hide()
 
         # De-Installieren Button
         self.btn_deinstall = QPushButton(self)
@@ -169,10 +123,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             "font-size: 20px;" +
             "color: #ffffff;"
         )
-        if self.appisinstall[self.awneu] == 1:
-            self.btn_deinstall.hide()
-        else:
-            self.btn_deinstall.show()
+        self.btn_deinstall.hide()
 
         # Starten Button
         self.btn_start = QPushButton(self)
@@ -189,10 +140,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             "font-size: 35px;" +
             "color: #ffffff;"
         )
-        if self.appisinstall[self.awneu] == 1:
-            self.btn_start.hide()
-        else:
-            self.btn_start.show()
+        self.btn_start.hide()
 
         # Applist Buttons
         self.count = 0
@@ -234,45 +182,28 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
 
     def awknopf(self):
         e = self.sender()
-        print(e.objectName())
+        # print(e.objectName())
         self.awalt = self.awneu
         self.awneu = int(e.objectName())
-        self.gamechange()
+        self.appchange()
 
-    def gamechange(self):
-        s = subprocess.call(['flatpak', 'info', self.appcom[self.awneu]])
-        if s == 0:
-            self.appisinstall[self.awneu] = 0
-            print("ist installiert!")
-        else:
-            self.appisinstall[self.awneu] = 1
-            print("ist nicht installiert")
-        self.gamename.setText(self.applist[self.awneu])
+    def appchange(self):
+        self.appname.setText(self.applist[self.awneu])
         self.cover.setPixmap(QPixmap(self.coverpm[self.awneu]))
         self.btext.setText(self.beschreibung[self.awneu])
         self.fileurl = self.yt1 + self.videoadr[self.awneu] + self.yt2 + self.videoadr[self.awneu]
         self.webview.setUrl(QUrl(self.fileurl))
-        if self.appisinstall[self.awneu] == 0:
-            self.btn_install.hide()
-            self.btn_deinstall.show()
-            self.btn_start.show()
-        else:
-            self.btn_install.show()
-            self.btn_start.hide()
-            self.btn_deinstall.hide()
+        self.update_btn()
 
     def update_btn(self):
-        s = subprocess.call(['flatpak', 'info', self.appcom[self.awneu]])
-        if s == 0:
-            self.appisinstall[self.awneu] = 0
-            print("ist installiert!")
-        else:
-            self.appisinstall[self.awneu] = 1
-            print("ist nicht installiert")
-        if self.appisinstall[self.awneu] == 0:
+        s = subprocess.Popen(['flatpak', 'info', self.appcom[self.awneu]],
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, stderr = s.communicate()
+        if stderr.decode('utf-8') == "":
             self.btn_install.hide()
             self.btn_deinstall.show()
             self.btn_start.show()
+            # print("ist installiert!")
         else:
             self.btn_install.show()
             self.btn_start.hide()
@@ -280,38 +211,22 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
 
     def installieren(self):
         self.stAnzeige.show()
-        self.stAnzeige.setText("Es wird installiert ...")
-        try:
-            s = subprocess.Popen(['flatpak', 'install', self.appcom[self.awneu], '-y'])
-            print("wird installiert" + s)
-        finally:
-            print("missed")
-
-        s = subprocess.call(['flatpak', 'info', self.appcom[self.awneu]])
-        if s == 0:
-            self.appisinstall[self.awneu] = 0
-            print("ist installiert!")
-        else:
-            self.appisinstall[self.awneu] = 1
-            print("ist nicht installiert")
-        self.gamechange()
+        self.stAnzeige.setText("es wird installiert")
+        s = subprocess.Popen(['flatpak', 'install', self.appcom[self.awneu], '-y'],
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        # stdout, stderr = s.communicate()
+        print("wird installiert")
+        self.update_btn()
         self.stAnzeige.hide()
 
     def deinstallieren(self):
         self.stAnzeige.setText("Es wird deinstalliert...")
         self.stAnzeige.show()
-        s = subprocess.Popen(['flatpak', 'uninstall', self.appcom[self.awneu], '-y'])
-        print("wird deinstalliert")
-        print(s)
-
-        s = subprocess.call(['flatpak', 'info', self.appcom[self.awneu]])
-        if s == 0:
-            self.appisinstall[self.awneu] = 0
-            print("ist installiert!")
-        else:
-            self.appisinstall[self.awneu] = 1
-            print("ist nicht installiert")
-        self.gamechange()
+        s = subprocess.Popen(['flatpak', 'uninstall', self.appcom[self.awneu], '-y'],
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        # stdout=s.communicate()
+        print("wird de-installiert")
+        self.update_btn()
         self.stAnzeige.hide()
 
     def starten(self):
@@ -321,17 +236,8 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             print(s)
         finally:
             print("missed")
-            self.exit()
 
-        s = subprocess.call(['flatpak', 'info', self.appcom[self.awneu]])
-
-        if s == 0:
-            self.appisinstall[self.awneu] = 0
-            print("ist installiert!")
-        else:
-            self.appisinstall[self.awneu] = 1
-            print("ist nicht installiert")
-        self.gamechange()
+        self.update_btn()
 
     def timerEvent(self, e):
         if self.i >= 100:
@@ -344,6 +250,44 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
     def timerstartem(self):
         self.i = 0
         self.timer.start(1000, self)
+
+# ------------- Appdaten einlesen ------------------------------------------------------------
+    def appseinlesen(self):
+        cpath = os.path.dirname(os.path.abspath(__file__))
+        file1 = open(cpath + "/appdaten.data", 'r')
+        count = 0
+        while True:
+            line = file1.readline()
+            if not line:
+                break
+
+            self.applist.append(line[0: len(line) - 1])
+            print("Line{}: {}".format(count, line.strip()))
+            line = file1.readline()
+            if not line:
+                break
+            self.coverpm.append(cpath + line[0:len(line) - 1])
+            print("Line{}: {}".format(count, line.strip()))
+            line = file1.readline()
+            if not line:
+                break
+            self.videoadr.append(line[0:len(line) - 1])
+            print("Line{}: {}".format(count, line.strip()))
+            line = file1.readline()
+            if not line:
+                break
+            self.beschreibung.append(line[0:len(line) - 1])
+            print("Line{}: {}".format(count, line.strip()))
+            line = file1.readline()
+            if not line:
+                break
+            self.appcom.append(line[0:len(line) - 1])
+            print("Line{}: {}".format(count, line.strip()))
+
+            count += 1
+        file1.close()
+
+    # --------------------------------------------------------------------------------------------
 
 
 app = QApplication(sys.argv)
