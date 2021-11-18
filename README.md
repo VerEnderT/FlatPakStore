@@ -1,7 +1,8 @@
 # FlatPakStore
 Neuer Flatpak Store in Deutsch
 
-![FlatPakStore-Alpha](https://user-images.githubusercontent.com/53666253/142252454-cc6bbfa2-8f3a-42b4-b1a4-d1523d07f794.png)
+![Flatpakstore211118](https://user-images.githubusercontent.com/53666253/142505689-834dc41f-dded-4efa-8d02-9e33f55c5ce8.png)
+
 
 
 mit Videos zu den Apps direkt aus youtube
@@ -9,13 +10,14 @@ mit Videos zu den Apps direkt aus youtube
 .
 
 to do ...
-installations abfrage
 
-installations prozess
+installations abfrage -- Erledigt
 
-Bilder aus dem internet einbinden ohne speicher in der app zu belasten.
+installations prozess --- muss noch verschönert werden. funktioniert aber.
 
-kategorien 
+Bilder aus dem internet einbinden ohne speicher in der app zu belasten. --- vielleicht 
+
+kategorien --- sind eingebaut !
 
 Anordnung und styling verbessern
 
