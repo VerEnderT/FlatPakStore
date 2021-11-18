@@ -12,6 +12,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
     def __init__(self):
         super().__init__()
 
+        self.appmenge = 0
         self.testbutton = "0"
         self.awalt = 0
         self.awneu = 0
@@ -64,10 +65,14 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         image1 = QPixmap(self.coverpm[self.awneu])
         self.cover = QLabel(self)
         self.cover.setPixmap(image1)
-        self.cover.setFixedWidth(331)
+        self.cover.setFixedWidth(360)
         self.cover.setFixedHeight(445)
         self.cover.setScaledContents(True)
         self.cover.move(620, 25)
+        self.cover.setAlignment(Qt.AlignCenter)
+        self.cover.setStyleSheet(
+            "background: rgba(0, 0, 0, 0);"
+        )
 
         # Label Spielname
         self.appname = QTextEdit(self)
@@ -140,19 +145,9 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             "font-size: 35px;" +
             "color: #ffffff;"
         )
-        self.btn_start.hide()
 
-        # Applist Buttons
-        self.count = 0
-        for i in self.applist:
-            self.gamebtn = QPushButton(self)
-            self.gamebtn.setText(self.applist[self.count])
-            self.gamebtn.move(50, 150 + self.count * 35)
-            self.aobjectname = str(self.count)
-            self.gamebtn.setObjectName(self.aobjectname)
-            self.count = self.count + 1
-            self.gamebtn.clicked.connect(self.awknopf)
-            print(i)
+        self.btn_start.hide()
+        self.appbtnmake()
 
         # Label Status
         self.stAnzeige = QLabel(self)
@@ -252,10 +247,14 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.i = 0
         self.timer.start(1000, self)
 
+
+
+
+
 # ------------- Appdaten einlesen ------------------------------------------------------------
     def appseinlesen(self):
         cpath = os.path.dirname(os.path.abspath(__file__))
-        file1 = open(cpath + "/appdaten.data", 'r')
+        file1 = open(cpath + "/games.data", 'r')
         count = 0
         while True:
             line = file1.readline()
@@ -286,9 +285,23 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             print("Line{}: {}".format(count, line.strip()))
 
             count += 1
+        self.appmenge = count
         file1.close()
 
-    # --------------------------------------------------------------------------------------------
+        # Applist Buttons
+    def appbtnmake(self):
+        self.count = 0
+        for i in self.applist:
+            self.btn_app = QPushButton(self)
+            self.btn_app.setText(self.applist[self.count])
+            self.btn_app.move(50, 130 + self.count * 35)
+            self.aobjectname = str(self.count)
+            self.btn_app.setObjectName(self.aobjectname)
+            self.btn_app.clicked.connect(self.awknopf)
+            self.count = self.count + 1
+            print(i)
+
+# --------------------------------------------------------------------------------------------
 
 
 app = QApplication(sys.argv)
