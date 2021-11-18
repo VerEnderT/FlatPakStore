@@ -253,19 +253,20 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             self.btn_start.hide()
             self.btn_deinstall.hide()
 
+    # noinspection PyUnusedLocal
     def installieren(self):
         self.stAnzeige.setText("es wird installiert")
-        s = subprocess.Popen(['flatpak', 'install', self.appcom[self.awneu], '-y'],
-                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        s = subprocess.Popen(['flatpak', 'install', self.appcom[self.awneu], '-y'])
         # stdout, stderr = s.communicate()
+        # print(stdout.decode('utf-8'))
         print("wird installiert")
         self.update_btn()
+
     def deinstallieren(self):
         self.stAnzeige.setText("Es wird deinstalliert...")
         self.stAnzeige.show()
-        s = subprocess.Popen(['flatpak', 'uninstall', self.appcom[self.awneu], '-y'],
-                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        # stdout=s.communicate()
+        s = subprocess.run(['flatpak', 'uninstall', self.appcom[self.awneu], '-y'])
+        # stdout, stderr =s.communicate()
         print("wird de-installiert")
         self.update_btn()
 
@@ -283,7 +284,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         if self.i >= 100:
             # self.timer.stop()
             self.i = 0
-            #self.update_btn()
+            # self.update_btn()
         self.i = self.i + 1
         self.stimes.setValue(int(self.i))
 
@@ -393,6 +394,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.btn_app9.setObjectName("9")
         self.btn_app9.clicked.connect(self.awknopf)
 
+# ----- Liste neu beschreiben -------------------------
         self.btn_app0.setText(self.applist[0])
         self.btn_app0.show()
 
@@ -439,7 +441,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             self.btn_app6.hide()
 
         if self.appmenge >= self.apppage * 10 + 7:
-            print(str(self.appmenge)+"-"+str(self.apppage * 10 +7))
+            print(str(self.appmenge)+"-"+str(self.apppage * 10 + 7))
             self.btn_app7.setText(self.applist[7])
             self.btn_app7.show()
             print("an")
@@ -447,7 +449,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             self.btn_app7.hide()
 
         if self.appmenge >= self.apppage * 10 + 8:
-            print(str(self.appmenge)+"-"+str(self.apppage * 10 +8))
+            print(str(self.appmenge)+"-"+str(self.apppage * 10 + 8))
             self.btn_app8.setText(self.applist[8])
             self.btn_app8.show()
             print("an")
@@ -455,14 +457,12 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             self.btn_app8.hide()
 
         if self.appmenge >= self.apppage * 10 + 9:
-            print("wtf" + str(self.appmenge)+"-"+str(self.apppage * 10 +9))
+            print("wtf" + str(self.appmenge)+"-"+str(self.apppage * 10 + 9))
             self.btn_app9.setText(self.applist[9])
             self.btn_app9.show()
             print("an")
         else:
             self.btn_app9.hide()
-
-
 
     def catseinlesen(self):
         cpath = os.path.dirname(os.path.abspath(__file__))
@@ -479,7 +479,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             line = file1.readline()
             if not line:
                 break
-            self.appcpath.append(cpath +"/data/" + line[0:len(line) - 1])
+            self.appcpath.append(cpath + "/data/" + line[0:len(line) - 1])
             print("Line{}: {}".format(count, line.strip()))
             print(self.appcpath[count])
             count += 1
@@ -491,7 +491,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         for i in self.appcategorie:
             self.btn_cat = QPushButton(self)
             self.btn_cat.setText(self.appcategorie[self.count])
-            self.btn_cat.move(10+ self.count * 100, 5 )
+            self.btn_cat.move(10 + self.count * 100, 5)
             self.cobjectname = str(self.count)
             self.btn_cat.setObjectName(self.cobjectname)
             self.btn_cat.clicked.connect(self.cwknopf)
