@@ -62,7 +62,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.webview.setUrl(QUrl(self.fileurl))
         self.webview.setMinimumWidth(400)
         self.webview.setMinimumHeight(225)
-        self.webview.move(185, 20)
+        self.webview.move(185, 50)
         self.webview.settings()
 
         # Cover
@@ -72,7 +72,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.cover.setFixedWidth(360)
         self.cover.setFixedHeight(445)
         self.cover.setScaledContents(True)
-        self.cover.move(620, 25)
+        self.cover.move(620, 50)
         self.cover.setAlignment(Qt.AlignCenter)
         self.cover.setStyleSheet(
             "background: rgba(0, 0, 0, 0);"
@@ -84,7 +84,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.appname.setMinimumWidth(400)
         self.appname.setMinimumHeight(100)
         self.appname.setText("Super TuX Kart")
-        self.appname.move(185, 240)
+        self.appname.move(185, 270)
         self.appname.setStyleSheet(
             "background: rgba(0, 0, 0, 0);" +
             "font-size: 35px;" +
@@ -95,9 +95,9 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.btext = QTextEdit(self)
         self.btext.setReadOnly(True)
         self.btext.setMinimumWidth(430)
-        self.btext.setMinimumHeight(280)
+        self.btext.setMinimumHeight(250)
         self.btext.setText(self.beschreibung[0])
-        self.btext.move(170, 300)
+        self.btext.move(170, 330)
         self.btext.setStyleSheet("background: rgba(0, 0, 0, 140); color: #ffffff;")
 
         # Installieren Button
@@ -120,7 +120,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         # De-Installieren Button
         self.btn_deinstall = QPushButton(self)
         self.btn_deinstall.setText("De-Installieren")
-        self.btn_deinstall.move(700, 480)
+        self.btn_deinstall.move(700, 500)
         self.btn_deinstall.setObjectName("2")
         self.btn_deinstall.clicked.connect(self.deinstallieren)
         self.btn_deinstall.setMinimumWidth(200)
@@ -137,7 +137,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         # Starten Button
         self.btn_start = QPushButton(self)
         self.btn_start.setText("Starten")
-        self.btn_start.move(650, 520)
+        self.btn_start.move(650, 540)
         self.btn_start.setObjectName("2")
         self.btn_start.clicked.connect(self.starten)
         self.btn_start.setMinimumWidth(300)
@@ -156,18 +156,18 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
 
         # Label Status
         self.stAnzeige = QLabel(self)
-        self.stAnzeige.setMinimumWidth(800)
-        self.stAnzeige.setMinimumHeight(100)
-        self.stAnzeige.setText("Es wird Installiert ...")
-        self.stAnzeige.move(100, 240)
-        self.stAnzeige.hide()
+        self.stAnzeige.setMinimumWidth(150)
+        self.stAnzeige.setMinimumHeight(50)
+        self.stAnzeige.setText(self.appcategorie[self.appcselect])
+        self.stAnzeige.move(20, 50)
+        #self.stAnzeige.hide()
         self.stAnzeige.setAlignment(Qt.AlignCenter)
         self.stAnzeige.setStyleSheet(
             "background: rgba(0, 200, 0, 150);" +
-            "font-size: 68px;" +
+            "font-size: 24px;" +
             "color: #00e500;" +
             "border: 4px solid '#f0f0f0';" +
-            "border-radius: 50px;" +
+            "border-radius: 10px;" +
             "color: #ffffff;"
         )
         self.appchange()
@@ -326,13 +326,13 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         file1.close()
 
 
-        # Applist Buttons
+    # Applist Buttons
     def catbtnmake(self):
         self.count = 0
         for i in self.appcategorie:
             self.btn_cat = QPushButton(self)
             self.btn_cat.setText(self.appcategorie[self.count])
-            self.btn_cat.move(10+ self.count * 55, 5 )
+            self.btn_cat.move(10+ self.count * 100, 5 )
             self.cobjectname = str(self.count)
             self.btn_cat.setObjectName(self.aobjectname)
             #self.btn_cat.clicked.connect(self.cwknopf)
