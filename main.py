@@ -1,6 +1,6 @@
 import sys
 import subprocess
-# import pathlib
+import os
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtWebEngineWidgets import *
@@ -26,9 +26,9 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.fileurl = self.yt1 + "ef9vYcuEDL4" + self.yt2 + "ef9vYcuEDL4"
 
 # ------------- Appdaten einlesen ------------------------------------------------------------
-        file1 = open('appdaten.data', 'r')
+        cpath = os.path.dirname(os.path.abspath(__file__))
+        file1 = open(cpath + "/appdaten.data", 'r')
         count = 0
-
         while True:
             count += 1
             line = file1.readline()
@@ -40,7 +40,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             line = file1.readline()
             if not line:
                 break
-            self.coverpm.append(line[0:len(line)-1])
+            self.coverpm.append(cpath + "/" + line[0:len(line)-1])
             print("Line{}: {}".format(count, line.strip()))
             line = file1.readline()
             if not line:
@@ -70,7 +70,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
 # --------------------------------------------------------------------------------------------
 
         # Hintergrund
-        image = QPixmap("./background.gif")
+        image = QPixmap(cpath + "/background.gif")
         background = QLabel(self)
         background.setPixmap(image)
         background.setFixedWidth(1000)
@@ -87,7 +87,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.stimes.hide()
 
         # logo
-        image = QPixmap("VerLinuxT-logo.png")
+        image = QPixmap(cpath + "/VerLinuxT-logo.png")
         logo = QLabel(self)
         logo.setPixmap(image)
         logo.setFixedWidth(300)
@@ -104,7 +104,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.webview.settings()
 
         # Cover
-        image1 = QPixmap("./SuperTuxKart.jpg")
+        image1 = QPixmap(cpath + "/SuperTuxKart.jpg")
         self.cover = QLabel(self)
         self.cover.setPixmap(image1)
         self.cover.setFixedWidth(331)
@@ -228,7 +228,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         # konfiguration Fenster und zeigen
         self.setGeometry(0 + 50, 50, 1000, 600)  # x-pos, y-pos, breite, höhe
         self.setWindowTitle("VerFlatpakT")  # Title name
-        self.setWindowIcon(QIcon("VerLinuxT-logo.png"))  # Datei für das logo des programms
+        self.setWindowIcon(QIcon(cpath + "/VerLinuxT-logo.png"))  # Datei für das logo des programms
         self.setFixedSize(1000, 600)  # fixe größe einstellen
         self.show()  # Fenster anzeigen
 
@@ -283,7 +283,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.stAnzeige.setText("Es wird installiert ...")
         try:
             s = subprocess.Popen(['flatpak', 'install', self.appcom[self.awneu], '-y'])
-            print("wird installiert")
+            print("wird installiert" + s)
         finally:
             print("missed")
 
@@ -335,7 +335,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
 
     def timerEvent(self, e):
         if self.i >= 100:
-            #self.timer.stop()
+            # self.timer.stop()
             self.i = 0
             self.update_btn()
         self.i = self.i + 1
