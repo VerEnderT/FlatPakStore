@@ -1,4 +1,3 @@
-import time
 import sys
 import subprocess
 # import pathlib
@@ -78,6 +77,14 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         background.setFixedHeight(700)
         background.setScaledContents(True)
         background.move(0, 0)
+
+        # fortschritsbalken
+        self.stimes = QProgressBar(self)
+        self.timer = QBasicTimer()
+        self.i = 0
+        self.timer.start(100, self)
+        self.stimes.move(20, 20)
+        self.stimes.hide()
 
         # logo
         image = QPixmap("VerLinuxT-logo.png")
@@ -233,6 +240,13 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.gamechange()
 
     def gamechange(self):
+        s = subprocess.call(['flatpak', 'info', self.appcom[self.awneu]])
+        if s == 0:
+            self.appisinstall[self.awneu] = 0
+            print("ist installiert!")
+        else:
+            self.appisinstall[self.awneu] = 1
+            print("ist nicht installiert")
         self.gamename.setText(self.applist[self.awneu])
         self.cover.setPixmap(QPixmap(self.coverpm[self.awneu]))
         self.btext.setText(self.beschreibung[self.awneu])
@@ -247,18 +261,31 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             self.btn_start.hide()
             self.btn_deinstall.hide()
 
+    def update_btn(self):
+        s = subprocess.call(['flatpak', 'info', self.appcom[self.awneu]])
+        if s == 0:
+            self.appisinstall[self.awneu] = 0
+            print("ist installiert!")
+        else:
+            self.appisinstall[self.awneu] = 1
+            print("ist nicht installiert")
+        if self.appisinstall[self.awneu] == 0:
+            self.btn_install.hide()
+            self.btn_deinstall.show()
+            self.btn_start.show()
+        else:
+            self.btn_install.show()
+            self.btn_start.hide()
+            self.btn_deinstall.hide()
+
     def installieren(self):
         self.stAnzeige.show()
         self.stAnzeige.setText("Es wird installiert ...")
-        time.sleep(3)
-        for i in range(10000):
-            print(i)
         try:
-            s = subprocess.call(['flatpak', 'install', self.appcom[self.awneu], '-y'])
+            s = subprocess.Popen(['flatpak', 'install', self.appcom[self.awneu], '-y'])
             print("wird installiert")
-            print(s)
-        except:
-            print("fehler aufgetretten")
+        finally:
+            print("missed")
 
         s = subprocess.call(['flatpak', 'info', self.appcom[self.awneu]])
         if s == 0:
@@ -273,13 +300,9 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
     def deinstallieren(self):
         self.stAnzeige.setText("Es wird deinstalliert...")
         self.stAnzeige.show()
-        time.sleep(3)
-        try:
-            s = subprocess.call(['flatpak', 'uninstall', self.appcom[self.awneu], '-y'])
-            print("wird deinstalliert")
-            print(s)
-        except:
-            print("fehler aufgetretten")
+        s = subprocess.Popen(['flatpak', 'uninstall', self.appcom[self.awneu], '-y'])
+        print("wird deinstalliert")
+        print(s)
 
         s = subprocess.call(['flatpak', 'info', self.appcom[self.awneu]])
         if s == 0:
@@ -293,13 +316,15 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
 
     def starten(self):
         try:
-            s = subprocess.call(['flatpak', 'run', self.appcom[self.awneu], '-y'])
+            s = subprocess.Popen(['flatpak', 'run', self.appcom[self.awneu], '-y'])
             print("wird gestartet")
             print(s)
-        except:
-            print("fehler aufgetretten")
+        finally:
+            print("missed")
+            self.exit()
 
         s = subprocess.call(['flatpak', 'info', self.appcom[self.awneu]])
+
         if s == 0:
             self.appisinstall[self.awneu] = 0
             print("ist installiert!")
@@ -307,6 +332,18 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             self.appisinstall[self.awneu] = 1
             print("ist nicht installiert")
         self.gamechange()
+
+    def timerEvent(self, e):
+        if self.i >= 100:
+            #self.timer.stop()
+            self.i = 0
+            self.update_btn()
+        self.i = self.i + 1
+        self.stimes.setValue(int(self.i))
+
+    def timerstartem(self):
+        self.i = 0
+        self.timer.start(1000, self)
 
 
 app = QApplication(sys.argv)
