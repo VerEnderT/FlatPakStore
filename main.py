@@ -40,7 +40,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             line = file1.readline()
             if not line:
                 break
-            self.coverpm.append(cpath + "/" + line[0:len(line)-1])
+            self.coverpm.append(cpath + line[0:len(line)-1])
             print("Line{}: {}".format(count, line.strip()))
             line = file1.readline()
             if not line:
@@ -104,7 +104,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.webview.settings()
 
         # Cover
-        image1 = QPixmap(cpath + "/SuperTuxKart.jpg")
+        image1 = QPixmap(self.coverpm[self.awneu])
         self.cover = QLabel(self)
         self.cover.setPixmap(image1)
         self.cover.setFixedWidth(331)
