@@ -170,6 +170,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             "border-radius: 50px;" +
             "color: #ffffff;"
         )
+        self.appchange()
 
 # ---------------------------------------------------------------------------------------------
 
