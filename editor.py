@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtWebEngineWidgets import *
 from PyQt5.QtCore import *
+from PyQt5.QtGui import QIcon
 # from PyQt5.QtMultimedia import QMediaContent
 
 
@@ -99,6 +100,24 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             "background: rgba(0, 0, 0, 0);"
         )
 
+        # btn_addApp
+        self.btn_addApp = QPushButton(self)
+        self.btn_addApp.setMaximumWidth(20)
+        self.btn_addApp.setMaximumHeight(20)
+        self.btn_addApp.setText("+")
+        # self.btn_addApp.setIcon(self.style().standardIcon(getattr(QStyle, "SP_FileDialogNewFolder")))
+        self.btn_addApp.move(20, 107)
+        self.btn_addApp.setStyleSheet("font-size: 20px;padding-top: -5px;")
+
+        # btn_addcat
+        self.btn_addcat = QPushButton(self)
+        self.btn_addcat.setMaximumWidth(20)
+        self.btn_addcat.setMaximumHeight(20)
+        self.btn_addcat.setText("+")
+        # self.btn_addApp.setIcon(self.style().standardIcon(getattr(QStyle, "SP_FileDialogNewFolder")))
+        self.btn_addcat.move(10, 37)
+        self.btn_addcat.setStyleSheet("font-size: 20px;padding-top: -5px;")
+
         # Label Spielname
         self.appname = QTextEdit(self)
         self.appname.setReadOnly(False)
@@ -123,14 +142,14 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.btext.setStyleSheet("background: rgba(0, 0, 0, 140); color: #ffffff;")
 
         # Speichern
-        self.btn_install = QPushButton(self)
-        self.btn_install.setText("Speicherm")
-        self.btn_install.move(650, 520)
-        self.btn_install.setObjectName("2")
-        self.btn_install.clicked.connect(self.installieren)
-        self.btn_install.setMinimumWidth(300)
-        self.btn_install.setMinimumHeight(50)
-        self.btn_install.setStyleSheet(
+        self.btn_speichern = QPushButton(self)
+        self.btn_speichern.setText("Speicherm")
+        self.btn_speichern.move(650, 520)
+        self.btn_speichern.setObjectName("2")
+        self.btn_speichern.clicked.connect(self.speichern)
+        self.btn_speichern.setMinimumWidth(300)
+        self.btn_speichern.setMinimumHeight(50)
+        self.btn_speichern.setStyleSheet(
             "border: 4px solid '#f0f0f0';" +
             "background: #0eff2a;" +
             "border-radius: 25px;" +
@@ -139,14 +158,14 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         )
 
         # Youtube edit Button
-        self.btn_deinstall = QPushButton(self)
-        self.btn_deinstall.setText("ändern")
-        self.btn_deinstall.move(300, 50)
-        self.btn_deinstall.setObjectName("2")
-        self.btn_deinstall.clicked.connect(self.youtubeedit)
-        self.btn_deinstall.setMinimumWidth(150)
-        self.btn_deinstall.setMinimumHeight(30)
-        self.btn_deinstall.setStyleSheet(
+        self.btn_youtube = QPushButton(self)
+        self.btn_youtube.setText("ändern")
+        self.btn_youtube.move(300, 50)
+        self.btn_youtube.setObjectName("2")
+        self.btn_youtube.clicked.connect(self.youtubeedit)
+        self.btn_youtube.setMinimumWidth(150)
+        self.btn_youtube.setMinimumHeight(30)
+        self.btn_youtube.setStyleSheet(
             "border: 4px solid '#f0f0f0';" +
             "background: #aa0000;" +
             "border-radius: 15px;" +
@@ -155,14 +174,14 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         )
 
         # Cover ändern
-        self.btn_start = QPushButton(self)
-        self.btn_start.setText("ämderm")
-        self.btn_start.move(725, 50)
-        self.btn_start.setObjectName("2")
-        self.btn_start.clicked.connect(self.coveredit)
-        self.btn_start.setMinimumWidth(150)
-        self.btn_start.setMinimumHeight(30)
-        self.btn_start.setStyleSheet(
+        self.btn_cedit = QPushButton(self)
+        self.btn_cedit.setText("ämderm")
+        self.btn_cedit.move(725, 50)
+        self.btn_cedit.setObjectName("2")
+        self.btn_cedit.clicked.connect(self.coveredit)
+        self.btn_cedit.setMinimumWidth(150)
+        self.btn_cedit.setMinimumHeight(30)
+        self.btn_cedit.setStyleSheet(
             "border: 4px solid '#f0f0f0';" +
             "background: #aa0000;" +
             "border-radius: 15px;" +
@@ -176,9 +195,9 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         # Label Status
         self.stAnzeige = QLabel(self)
         self.stAnzeige.setMinimumWidth(150)
-        self.stAnzeige.setMinimumHeight(50)
+        self.stAnzeige.setMinimumHeight(40)
         self.stAnzeige.setText(self.appcategorie[self.appcselect])
-        self.stAnzeige.move(20, 50)
+        self.stAnzeige.move(20, 60)
         # self.stAnzeige.hide()
         self.stAnzeige.setAlignment(Qt.AlignCenter)
         self.stAnzeige.setStyleSheet(
@@ -202,6 +221,9 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
 
     def beschreibungchange(self):
         self.beschreibung[self.awneu] = self.btext.toPlainText()
+
+    def speichern(self):
+        print("hallo")
 
     def youtubeedit(self):
         text, ok = QInputDialog.getText(self, "Youtube ändern", "Youtube Video:")
@@ -254,7 +276,6 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.btext.setText(self.beschreibung[self.awneu])
         self.fileurl = self.yt1 + self.videoadr[self.awneu] + self.yt2 + self.videoadr[self.awneu]
         self.webview.setUrl(QUrl(self.fileurl))
-        self.update_btn()
 
     def starten(self):
         text, ok = QInputDialog.getText(self, "Cover ändern", ":")
