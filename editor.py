@@ -1,5 +1,5 @@
 import sys
-import subprocess
+# import subprocess
 import os
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -101,7 +101,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
 
         # Label Spielname
         self.appname = QTextEdit(self)
-        self.appname.setReadOnly(True)
+        self.appname.setReadOnly(False)
         self.appname.setMinimumWidth(400)
         self.appname.setMinimumHeight(100)
         self.appname.setText("Super TuX Kart")
@@ -114,16 +114,17 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
 
         # Beschreibung
         self.btext = QTextEdit(self)
-        self.btext.setReadOnly(True)
+        self.btext.setReadOnly(False)
         self.btext.setMinimumWidth(430)
         self.btext.setMinimumHeight(250)
         self.btext.setText(self.beschreibung[0])
+        self.btext.textChanged.connect(self.beschreibungchange)
         self.btext.move(170, 330)
         self.btext.setStyleSheet("background: rgba(0, 0, 0, 140); color: #ffffff;")
 
-        # Installieren Button
+        # Speichern
         self.btn_install = QPushButton(self)
-        self.btn_install.setText("Installieren")
+        self.btn_install.setText("Speicherm")
         self.btn_install.move(650, 520)
         self.btn_install.setObjectName("2")
         self.btn_install.clicked.connect(self.installieren)
@@ -136,15 +137,14 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             "font-size: 35px;" +
             "color: #ffffff;"
         )
-        self.btn_install.hide()
 
-        # De-Installieren Button
+        # Youtube edit Button
         self.btn_deinstall = QPushButton(self)
-        self.btn_deinstall.setText("De-Installieren")
-        self.btn_deinstall.move(700, 500)
+        self.btn_deinstall.setText("ändern")
+        self.btn_deinstall.move(300, 50)
         self.btn_deinstall.setObjectName("2")
-        self.btn_deinstall.clicked.connect(self.deinstallieren)
-        self.btn_deinstall.setMinimumWidth(200)
+        self.btn_deinstall.clicked.connect(self.youtubeedit)
+        self.btn_deinstall.setMinimumWidth(150)
         self.btn_deinstall.setMinimumHeight(30)
         self.btn_deinstall.setStyleSheet(
             "border: 4px solid '#f0f0f0';" +
@@ -153,25 +153,23 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             "font-size: 20px;" +
             "color: #ffffff;"
         )
-        self.btn_deinstall.hide()
 
-        # Starten Button
+        # Cover ändern
         self.btn_start = QPushButton(self)
-        self.btn_start.setText("Starten")
-        self.btn_start.move(650, 540)
+        self.btn_start.setText("ämderm")
+        self.btn_start.move(725, 50)
         self.btn_start.setObjectName("2")
-        self.btn_start.clicked.connect(self.starten)
-        self.btn_start.setMinimumWidth(300)
-        self.btn_start.setMinimumHeight(50)
+        self.btn_start.clicked.connect(self.coveredit)
+        self.btn_start.setMinimumWidth(150)
+        self.btn_start.setMinimumHeight(30)
         self.btn_start.setStyleSheet(
             "border: 4px solid '#f0f0f0';" +
-            "background: #0eff2a;" +
-            "border-radius: 25px;" +
-            "font-size: 35px;" +
+            "background: #aa0000;" +
+            "border-radius: 15px;" +
+            "font-size: 20px;" +
             "color: #ffffff;"
         )
 
-        self.btn_start.hide()
         self.appbtnmake()
         self.catbtnmake()
 
@@ -201,6 +199,24 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.setWindowIcon(QIcon(self.cpath + "/VerLinuxT-logo.png"))  # Datei für das logo des programms
         self.setFixedSize(1000, 600)  # fixe größe einstellen
         self.show()  # Fenster anzeigen
+
+    def beschreibungchange(self):
+        self.beschreibung[self.awneu] = self.btext.toPlainText()
+
+    def youtubeedit(self):
+        text, ok = QInputDialog.getText(self, "Youtube ändern", "Youtube Video:")
+
+        if ok:
+            self.videoadr[self.awneu] = text
+            self.fileurl = self.yt1 + self.videoadr[self.awneu] + self.yt2 + self.videoadr[self.awneu]
+            self.appchange()
+
+    def coveredit(self):
+        text, ok = QInputDialog.getText(self, "Cover ändern", "bilddateiname: (im ordner/cover)")
+
+        if ok:
+            self.coverpm[self.awneu] = text
+            self.appchange()
 
     def awknopf(self):
         e = self.sender()
@@ -233,66 +249,21 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
 
     def appchange(self):
         self.appname.setText(self.applist[self.awneu])
-        file = self.cpath + "/cover/" + self.coverpm[self.awneu]
+        file = self.cpath+"/cover/"+self.coverpm[self.awneu]
         self.cover.setPixmap(QPixmap(file))
         self.btext.setText(self.beschreibung[self.awneu])
         self.fileurl = self.yt1 + self.videoadr[self.awneu] + self.yt2 + self.videoadr[self.awneu]
         self.webview.setUrl(QUrl(self.fileurl))
         self.update_btn()
 
-    def update_btn(self):
-        s = subprocess.Popen(['flatpak', 'info', self.appcom[self.awneu]],
-                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        stdout, stderr = s.communicate()
-        if stderr.decode('utf-8') == "":
-            self.btn_install.hide()
-            self.btn_deinstall.show()
-            self.btn_start.show()
-            # print("ist installiert!")
-        else:
-            self.btn_install.show()
-            self.btn_start.hide()
-            self.btn_deinstall.hide()
-
-    # noinspection PyUnusedLocal
-    def installieren(self):
-        self.stAnzeige.setText("es wird installiert")
-        s = subprocess.Popen(['flatpak', 'install', self.appcom[self.awneu], '-y'])
-        # stdout, stderr = s.communicate()
-        # print(stdout.decode('utf-8'))
-        print("wird installiert")
-        self.update_btn()
-
-    # noinspection PyUnusedLocal
-    def deinstallieren(self):
-        self.stAnzeige.setText("Es wird deinstalliert...")
-        self.stAnzeige.show()
-        s = subprocess.run(['flatpak', 'uninstall', self.appcom[self.awneu], '-y'])
-        # stdout, stderr =s.communicate()
-        print("wird de-installiert")
-        self.update_btn()
-
     def starten(self):
-        try:
-            s = subprocess.Popen(['flatpak', 'run', self.appcom[self.awneu], '-y'])
-            print("wird gestartet")
-            print(s)
-        finally:
-            print("missed")
+        text, ok = QInputDialog.getText(self, "Cover ändern", ":")
+
+        if ok:
+            self.coverpm[self.awneu] = text
+            self.appchange()
 
         self.update_btn()
-
-    def timerEvent(self, e):
-        if self.i >= 100:
-            # self.timer.stop()
-            self.i = 0
-            # self.update_btn()
-        self.i = self.i + 1
-        self.stimes.setValue(int(self.i))
-
-    def timerstartem(self):
-        self.i = 0
-        self.timer.start(1000, self)
 
 # ------------- Appdaten einlesen ------------------------------------------------------------
     def appseinlesen(self):
