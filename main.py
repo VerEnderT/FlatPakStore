@@ -181,7 +181,6 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.stAnzeige.setMinimumHeight(50)
         self.stAnzeige.setText(self.appcategorie[self.appcselect])
         self.stAnzeige.move(20, 50)
-        # self.stAnzeige.hide()
         self.stAnzeige.setAlignment(Qt.AlignCenter)
         self.stAnzeige.setStyleSheet(
             "background: rgba(0, 200, 0, 150);" +
@@ -191,8 +190,40 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             "border-radius: 10px;" +
             "color: #ffffff;"
         )
-        self.appchange()
 
+
+
+        # Label Seitenanzeige
+        self.pageshow = QLabel(self)
+        self.pageshow.setFixedWidth(100)
+        self.pageshow.setFixedHeight(20)
+        self.pageshow.setText("Seite: " + str(self.apppage+1) + " / "+ str(int(self.count / 10) + 1))
+        self.pageshow.move(50, 107)
+        self.pageshow.setAlignment(Qt.AlignCenter)
+        self.pageshow.setStyleSheet("background: rgba(255, 255, 255, 30);" )
+
+
+        # Seite zurück Button
+        self.btn_pageminus = QPushButton(self)
+        self.btn_pageminus.setText("<")
+        self.btn_pageminus.move(28, 107)
+        #self.btn_pageminus.clicked.connect(self.pageminus)
+        self.btn_pageminus.setMaximumWidth(20)
+        self.btn_pageminus.setMaximumHeight(20)
+        self.btn_pageminus.setStyleSheet("font-size: 20px;padding-top: -5px;")
+
+        # Seite vor Button
+        self.btn_pageplus = QPushButton(self)
+        self.btn_pageplus.setText(">")
+        self.btn_pageplus.move(152, 107)
+        #self.btn_pageplus.clicked.connect(self.pageplus)
+        self.btn_pageplus.setMaximumWidth(20)
+        self.btn_pageplus.setMaximumHeight(20)
+        self.btn_pageplus.setStyleSheet("font-size: 20px;padding-top: -5px;")
+
+
+
+        self.appchange()
 # ---------------------------------------------------------------------------------------------
 
         # konfiguration Fenster und zeigen
@@ -325,7 +356,8 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             line = file1.readline()
             if not line:
                 break
-            self.beschreibung.append(line[0:len(line) - 1])
+            line1 = line.replace("QE", "\n")
+            self.beschreibung.append(line1[0:len(line1) - 1])
             print("Line{}: {}".format(count, line.strip()))
             line = file1.readline()
             if not line:

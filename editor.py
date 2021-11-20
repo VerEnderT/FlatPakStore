@@ -105,8 +105,9 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.btn_addApp.setMaximumWidth(20)
         self.btn_addApp.setMaximumHeight(20)
         self.btn_addApp.setText("+")
+        self.btn_addApp.clicked.connect(self.addapp)
         # self.btn_addApp.setIcon(self.style().standardIcon(getattr(QStyle, "SP_FileDialogNewFolder")))
-        self.btn_addApp.move(20, 107)
+        self.btn_addApp.move(5, 107)
         self.btn_addApp.setStyleSheet("font-size: 20px;padding-top: -5px;")
 
         # btn_addcat
@@ -118,16 +119,31 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.btn_addcat.move(10, 37)
         self.btn_addcat.setStyleSheet("font-size: 20px;padding-top: -5px;")
 
-        # Label Spielname
+        # Label Appname
         self.appname = QTextEdit(self)
         self.appname.setReadOnly(False)
         self.appname.setMinimumWidth(400)
         self.appname.setMinimumHeight(100)
         self.appname.setText("Super TuX Kart")
+        self.appname.textChanged.connect(self.appnamechange)
         self.appname.move(185, 270)
         self.appname.setStyleSheet(
             "background: rgba(0, 0, 0, 0);" +
             "font-size: 35px;" +
+            "color: #ffffff;"
+        )
+
+        # Label Appcomname
+        self.appcomname = QTextEdit(self)
+        self.appcomname.setReadOnly(False)
+        self.appcomname.setFixedWidth(300)
+        self.appcomname.setFixedHeight(30)
+        self.appcomname.setText(self.appcom[0])
+        self.appcomname.textChanged.connect(self.appcomnamechange)
+        self.appcomname.move(660, 500)
+        self.appcomname.setStyleSheet(
+            "background: rgba(100, 100, 0, 100);" +
+            "font-size: 15px;" +
             "color: #ffffff;"
         )
 
@@ -144,7 +160,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         # Speichern
         self.btn_speichern = QPushButton(self)
         self.btn_speichern.setText("Speicherm")
-        self.btn_speichern.move(650, 520)
+        self.btn_speichern.move(650, 540)
         self.btn_speichern.setObjectName("2")
         self.btn_speichern.clicked.connect(self.speichern)
         self.btn_speichern.setMinimumWidth(300)
@@ -198,7 +214,6 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.stAnzeige.setMinimumHeight(40)
         self.stAnzeige.setText(self.appcategorie[self.appcselect])
         self.stAnzeige.move(20, 60)
-        # self.stAnzeige.hide()
         self.stAnzeige.setAlignment(Qt.AlignCenter)
         self.stAnzeige.setStyleSheet(
             "background: rgba(0, 200, 0, 150);" +
@@ -208,6 +223,39 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             "border-radius: 10px;" +
             "color: #ffffff;"
         )
+
+
+
+        # Label Seitenanzeige
+        self.pageshow = QLabel(self)
+        self.pageshow.setFixedWidth(100)
+        self.pageshow.setFixedHeight(20)
+        self.pageshow.setText("Seite: " + str(self.apppage+1) + " / "+ str(int(self.count / 10) + 1))
+        self.pageshow.move(50, 107)
+        self.pageshow.setAlignment(Qt.AlignCenter)
+        self.pageshow.setStyleSheet("background: rgba(255, 255, 255, 30);" )
+
+
+        # Seite zurück Button
+        self.btn_pageminus = QPushButton(self)
+        self.btn_pageminus.setText("<")
+        self.btn_pageminus.move(28, 107)
+        #self.btn_pageminus.clicked.connect(self.pageminus)
+        self.btn_pageminus.setMaximumWidth(20)
+        self.btn_pageminus.setMaximumHeight(20)
+        self.btn_pageminus.setStyleSheet("font-size: 20px;padding-top: -5px;")
+
+        # Seite vor Button
+        self.btn_pageplus = QPushButton(self)
+        self.btn_pageplus.setText(">")
+        self.btn_pageplus.move(152, 107)
+        #self.btn_pageplus.clicked.connect(self.pageplus)
+        self.btn_pageplus.setMaximumWidth(20)
+        self.btn_pageplus.setMaximumHeight(20)
+        self.btn_pageplus.setStyleSheet("font-size: 20px;padding-top: -5px;")
+
+
+
         self.appchange()
 
 # ---------------------------------------------------------------------------------------------
@@ -222,8 +270,11 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
     def beschreibungchange(self):
         self.beschreibung[self.awneu] = self.btext.toPlainText()
 
-    def speichern(self):
-        print("hallo")
+    def appnamechange(self):
+        self.applist[self.awneu] = self.appname.toPlainText()
+
+    def appcomnamechange(self):
+        self.appcom[self.awneu] = self.appcomname.toPlainText()
 
     def youtubeedit(self):
         text, ok = QInputDialog.getText(self, "Youtube ändern", "Youtube Video:")
@@ -270,6 +321,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.appchange()
 
     def appchange(self):
+        self.appcomname.setText(self.appcom[self.awneu])
         self.appname.setText(self.applist[self.awneu])
         file = self.cpath+"/cover/"+self.coverpm[self.awneu]
         self.cover.setPixmap(QPixmap(file))
@@ -287,6 +339,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.update_btn()
 
 # ------------- Appdaten einlesen ------------------------------------------------------------
+
     def appseinlesen(self):
         catpath = self.appcpath[self.appcselect]
         print(catpath)
@@ -317,7 +370,8 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             line = file1.readline()
             if not line:
                 break
-            self.beschreibung.append(line[0:len(line) - 1])
+            line1 = line.replace("QE", "\n")
+            self.beschreibung.append(line[0:len(line1) - 1])
             print("Line{}: {}".format(count, line.strip()))
             line = file1.readline()
             if not line:
@@ -329,19 +383,46 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.appmenge = count - 1
         file1.close()
 
-        # Applist Buttons
-    def appbtn_make(self):
-        self.count = 0
+# --------- Speichern --------------------------------------------------------------------------------------------
+
+    def speichern(self):
+        catpath = self.appcpath[self.appcselect]
+        # catpath = "test.data"
+        print(catpath)
+        file1 = open(catpath, 'w')
+        # self.applist.clear()
+        # self.coverpm.clear()
+        # self.videoadr.clear()
+        # self.beschreibung.clear()
+        # self.appcom.clear()
+        count = 0
         for i in self.applist:
-            self.btn_app = QPushButton(self)
-            self.aobjectname = str(self.count)
-            self.btn_app.setUpdatesEnabled(True)
-            self.btn_app.setObjectName(self.aobjectname)
-            self.btn_app.setText(self.applist[self.count])
-            self.btn_app.clicked.connect(self.awknopf)
-            self.btn_app.move(50, 130 + self.count * 35)
-            self.count = self.count + 1
-            print(i)
+            text = self.applist[count]+"\n"
+            file1.write(text)
+            print("Line{}: {}".format(count, text))
+
+            text = self.coverpm[count]+"\n"
+            file1.write(text)
+            print("Line{}: {}".format(count, text))
+
+            text = self.videoadr[count]+"\n"
+            file1.write(text)
+            print("Line{}: {}".format(count, text))
+            text1 = self.beschreibung[count].replace("\n", "QE")
+            text = text1 + "\n"
+            file1.write(text)
+            print("Line{}: {}".format(count, text))
+
+            text = self.appcom[count]+"\n"
+            file1.write(text)
+            print("Line{}: {}".format(count, text))
+
+            count += 1
+        file1.close()
+        self.appchange()
+        self.appbtnmake()
+
+# -------------- Applist Buttons ------------------------------------------------
 
     def appbtnmake(self):
         print(self.appcategorie[self.appcselect])
@@ -490,6 +571,18 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             self.btn_cat.clicked.connect(self.cwknopf)
             print("catcount" + str(self.count) + " - " + i)
             self.count = self.count + 1
+
+# ---------------- Neue App hinzufügen -------------------------------------------------------
+    def addapp(self):
+        self.applist.append("neue App")
+        self.coverpm.append("default.gif")
+        self.videoadr.append("nRxToXoeqS4")
+        self.beschreibung.appen("das ist eine neue App")
+        self.appcom.append("org.neueApp.neueApp")
+        self.count = self.count + 1
+        self.awneu = self.count
+        self.appchange()
+
 # --------------------------------------------------------------------------------------------
 
 
