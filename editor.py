@@ -575,13 +575,17 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
 # ---------------- Neue App hinzufügen -------------------------------------------------------
     def addapp(self):
         self.applist.append("neue App")
+        print(self.applist)
         self.coverpm.append("default.gif")
+        print(self.coverpm)
         self.videoadr.append("nRxToXoeqS4")
-        self.beschreibung.appen("das ist eine neue App")
+        self.beschreibung.append("das ist eine neue App")
         self.appcom.append("org.neueApp.neueApp")
+        self.appmenge = self.appmenge + 1
         self.count = self.count + 1
-        self.awneu = self.count
+        self.awneu = self.appmenge
         self.appchange()
+        self.appbtnmake()
 
 # --------------------------------------------------------------------------------------------
 
