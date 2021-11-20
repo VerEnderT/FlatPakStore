@@ -238,7 +238,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.btn_pageminus = QPushButton(self)
         self.btn_pageminus.setText("<")
         self.btn_pageminus.move(28, 107)
-        #self.btn_pageminus.clicked.connect(self.pageminus)
+        self.btn_pageminus.clicked.connect(self.pageminus)
         self.btn_pageminus.setMaximumWidth(20)
         self.btn_pageminus.setMaximumHeight(20)
         self.btn_pageminus.setStyleSheet("font-size: 20px;padding-top: -5px;")
@@ -247,7 +247,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.btn_pageplus = QPushButton(self)
         self.btn_pageplus.setText(">")
         self.btn_pageplus.move(152, 107)
-        #self.btn_pageplus.clicked.connect(self.pageplus)
+        self.btn_pageplus.clicked.connect(self.pageplus)
         self.btn_pageplus.setMaximumWidth(20)
         self.btn_pageplus.setMaximumHeight(20)
         self.btn_pageplus.setStyleSheet("font-size: 20px;padding-top: -5px;")
@@ -266,6 +266,18 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.setWindowIcon(QIcon(self.cpath + "/VerLinuxT-logo.png"))  # Datei für das logo des programms
         self.setFixedSize(1000, 600)  # fixe größe einstellen
         self.show()  # Fenster anzeigen
+
+    def pageplus(self):
+        self.apppage = self.apppage + 1
+        self.awneu = self.apppage * 10
+        self.appchange()
+        self.appbtnmake()
+
+    def pageminus(self):
+        self.apppage = self.apppage - 1
+        self.awneu = self.apppage * 10
+        self.appchange()
+        self.appbtnmake()
 
     def beschreibungchange(self):
         self.beschreibung[self.awneu] = self.btext.toPlainText()
