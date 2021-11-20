@@ -172,8 +172,6 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         )
 
         self.btn_start.hide()
-        self.appbtnmake()
-        self.catbtnmake()
 
         # Label Status
         self.stAnzeige = QLabel(self)
@@ -223,6 +221,8 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
 
 
 
+        self.appbtnmake()
+        self.catbtnmake()
         self.appchange()
 # ---------------------------------------------------------------------------------------------
 
@@ -384,7 +384,18 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             print(i)
 
     def appbtnmake(self):
-        print(self.appcategorie[self.appcselect])
+        #print(self.appcategorie[self.appcselect])
+
+        self.btn_app0.close()
+        self.btn_app1.close()
+        self.btn_app2.close()
+        self.btn_app3.close()
+        self.btn_app4.close()
+        self.btn_app5.close()
+        self.btn_app6.close()
+        self.btn_app7.close()
+        self.btn_app8.close()
+        self.btn_app9.close()
 
         self.btn_app0 = QPushButton(self)
         self.btn_app0.move(50, 130 + 0 * 35)

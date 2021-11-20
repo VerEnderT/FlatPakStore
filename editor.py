@@ -205,8 +205,6 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             "color: #ffffff;"
         )
 
-        self.appbtnmake()
-        self.catbtnmake()
 
         # Label Status
         self.stAnzeige = QLabel(self)
@@ -256,6 +254,8 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
 
 
 
+        self.appbtnmake()
+        self.catbtnmake()
         self.appchange()
 
 # ---------------------------------------------------------------------------------------------
@@ -295,7 +295,8 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         e = self.sender()
         # print(e.objectName())
         self.awalt = self.awneu
-        self.awneu = int(e.objectName())
+        self.awneu = int(e.objectName()) + (self.apppage * 10)
+        print(self.awneu)
         self.appchange()
 
     def cwknopf(self):
@@ -344,7 +345,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         catpath = self.appcpath[self.appcselect]
         print(catpath)
         file1 = open(catpath, 'r')
-        count = 0
+        self.count = 0
         self.applist.clear()
         self.coverpm.clear()
         self.videoadr.clear()
@@ -356,31 +357,31 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
                 break
 
             self.applist.append(line[0: len(line) - 1])
-            print("Line{}: {}".format(count, line.strip()))
+            print("Line{}: {}".format(self.count, line.strip()))
             line = file1.readline()
             if not line:
                 break
             self.coverpm.append(line[0:len(line) - 1])
-            print("Line{}: {}".format(count, line.strip()))
+            print("Line{}: {}".format(self.count, line.strip()))
             line = file1.readline()
             if not line:
                 break
             self.videoadr.append(line[0:len(line) - 1])
-            print("Line{}: {}".format(count, line.strip()))
+            print("Line{}: {}".format(self.count, line.strip()))
             line = file1.readline()
             if not line:
                 break
             line1 = line.replace("QE", "\n")
             self.beschreibung.append(line[0:len(line1) - 1])
-            print("Line{}: {}".format(count, line.strip()))
+            print("Line{}: {}".format(self.count, line.strip()))
             line = file1.readline()
             if not line:
                 break
             self.appcom.append(line[0:len(line) - 1])
-            print("Line{}: {}".format(count, line.strip()))
+            print("Line{}: {}".format(self.count, line.strip()))
 
-            count += 1
-        self.appmenge = count - 1
+            self.count += 1
+        self.appmenge = self.count - 1
         file1.close()
 
 # --------- Speichern --------------------------------------------------------------------------------------------
@@ -425,8 +426,18 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
 # -------------- Applist Buttons ------------------------------------------------
 
     def appbtnmake(self):
-        print(self.appcategorie[self.appcselect])
+        #print(self.appcategorie[self.appcselect])
 
+        self.btn_app0.close()
+        self.btn_app1.close()
+        self.btn_app2.close()
+        self.btn_app3.close()
+        self.btn_app4.close()
+        self.btn_app5.close()
+        self.btn_app6.close()
+        self.btn_app7.close()
+        self.btn_app8.close()
+        self.btn_app9.close()
         self.btn_app0 = QPushButton(self)
         self.btn_app0.move(50, 130 + 0 * 35)
         self.btn_app0.setObjectName("0")
@@ -469,46 +480,56 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.btn_app9.clicked.connect(self.awknopf)
 
 # ----- Liste neu beschreiben -------------------------
-        self.btn_app0.setText(self.applist[0])
+        self.apppage = int(self.awneu/10)
+        self.pageshow.setText("Seite: " + str(self.apppage + 1) + " / " + str(int(self.appmenge / 10) + 1))
+        self.btn_app0.setText(self.applist[0 + self.apppage * 10])
         self.btn_app0.show()
+        if self.apppage == 0:
+            self.btn_pageminus.hide()
+        else:
+            self.btn_pageminus.show()
+        if int(self.appmenge / 10) > self.apppage:
+            self.btn_pageplus.show()
+        else:
+            self.btn_pageplus.hide()
 
         if self.appmenge >= self.apppage * 10 + 1:
-            self.btn_app1.setText(self.applist[1])
+            self.btn_app1.setText(self.applist[1 + self.apppage * 10])
             self.btn_app1.show()
             print("an" + self.applist[1])
         else:
             self.btn_app1.hide()
 
         if self.appmenge >= self.apppage * 10 + 2:
-            self.btn_app2.setText(self.applist[2])
+            self.btn_app2.setText(self.applist[2 + self.apppage * 10])
             self.btn_app2.show()
             print("an")
         else:
             self.btn_app2.hide()
 
         if self.appmenge >= self.apppage * 10 + 3:
-            self.btn_app3.setText(self.applist[3])
+            self.btn_app3.setText(self.applist[3 + self.apppage * 10])
             self.btn_app3.show()
             print("an")
         else:
             self.btn_app3.hide()
 
         if self.appmenge >= self.apppage * 10 + 4:
-            self.btn_app4.setText(self.applist[4])
+            self.btn_app4.setText(self.applist[4 + self.apppage * 10])
             self.btn_app4.show()
             print("an")
         else:
             self.btn_app4.hide()
 
         if self.appmenge >= self.apppage * 10 + 5:
-            self.btn_app5.setText(self.applist[5])
+            self.btn_app5.setText(self.applist[5 + self.apppage * 10])
             self.btn_app5.show()
             print("an")
         else:
             self.btn_app5.hide()
 
         if self.appmenge >= self.apppage * 10 + 6:
-            self.btn_app6.setText(self.applist[6])
+            self.btn_app6.setText(self.applist[6 + self.apppage * 10])
             self.btn_app6.show()
             print("an")
         else:
@@ -516,7 +537,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
 
         if self.appmenge >= self.apppage * 10 + 7:
             print(str(self.appmenge)+"-"+str(self.apppage * 10 + 7))
-            self.btn_app7.setText(self.applist[7])
+            self.btn_app7.setText(self.applist[7 + self.apppage * 10])
             self.btn_app7.show()
             print("an")
         else:
@@ -524,7 +545,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
 
         if self.appmenge >= self.apppage * 10 + 8:
             print(str(self.appmenge)+"-"+str(self.apppage * 10 + 8))
-            self.btn_app8.setText(self.applist[8])
+            self.btn_app8.setText(self.applist[8 + self.apppage * 10])
             self.btn_app8.show()
             print("an")
         else:
@@ -532,7 +553,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
 
         if self.appmenge >= self.apppage * 10 + 9:
             print("wtf" + str(self.appmenge)+"-"+str(self.apppage * 10 + 9))
-            self.btn_app9.setText(self.applist[9])
+            self.btn_app9.setText(self.applist[9 + self.apppage * 10])
             self.btn_app9.show()
             print("an")
         else:
@@ -584,6 +605,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.appmenge = self.appmenge + 1
         self.count = self.count + 1
         self.awneu = self.appmenge
+        print(self.awneu)
         self.appchange()
         self.appbtnmake()
 
