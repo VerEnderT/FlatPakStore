@@ -11,6 +11,8 @@ from PyQt5.QtCore import *
 class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
     def __init__(self):
         super().__init__()
+        self.dein = " "
+        self.ii = 0
         self.appproc = ""
         self.apppid = ""
         self.svc = ""
@@ -134,7 +136,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.btn_install.setMinimumHeight(50)
         self.btn_install.setStyleSheet(
             "border: 4px solid '#f0f0f0';" +
-            "background: #0eff2a;" +
+            "background: rgba(0, 200, 0, 255);" +
             "border-radius: 25px;" +
             "font-size: 35px;" +
             "color: #ffffff;"
@@ -168,7 +170,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.btn_start.setMinimumHeight(50)
         self.btn_start.setStyleSheet(
             "border: 4px solid '#f0f0f0';" +
-            "background: #0eff2a;" +
+            "background: rgba(0, 200, 0, 255);" +
             "border-radius: 25px;" +
             "font-size: 35px;" +
             "color: #ffffff;"
@@ -225,6 +227,15 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.status.setAlignment(Qt.AlignCenter)
         self.status.setStyleSheet("background: rgba(0, 0, 0, 200);")
         self.status.setFixedSize(400, 20)
+
+        self.statusrun = QLabel(self)
+        self.statusrun.move(200, 580)
+        self.statusrun.setText("")
+        self.statusrun.setAlignment(Qt.AlignCenter)
+        self.statusrun.setAutoFillBackground(True)
+        self.statusrun.setStyleSheet("background: rgba(0, 200, 0, 120);")
+        self.statusrun.setFixedSize(50, 10)
+        self.statusrun.hide()
 
         self.appbtnmake()
         self.catbtnmake()
@@ -294,13 +305,15 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             service_check = subprocess.call(["ps", "-c", i])
             if service_check == 0:
                 # programminstallation läuft noch
-                self.status.setText("Status: " + self.appproc + "wird de/installiert")
+                self.status.setText("Status: " + self.appproc + " wird" + self.dein + "installiert")
                 self.btn_install.setDisabled(True)
-                self.btn_install.setText("laüft bereits")
+                self.btn_install.setText("Bitte warten")
                 self.btn_deinstall.setDisabled(True)
-                self.btn_deinstall.setText("läuft bereits")
+                self.btn_deinstall.setText("beschäftigt")
                 self.btn_start.setDisabled(True)
                 self.btn_start.setText("Bitte warten")
+                self.statusrun.show()
+
             else:
                 # programm de/installation wurde beendet
                 self.appproc = ""
@@ -313,6 +326,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
                 self.btn_start.setText("Starten")
 
         else:
+            self.statusrun.hide()
             self.status.setText("Status: keine aktivitäten")
 
         s = subprocess.Popen(['flatpak', 'info', self.appcom[self.awneu]],
@@ -335,6 +349,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.svc = str(int(prozess1.pid)+1)
         self.appproc = self.applist[self.awneu]
         self.apppid = self.svc
+        self.dein = " "
         self.update_btn()
 
     # noinspection PyUnusedLocal
@@ -345,6 +360,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.svc = str(int(prozess1.pid)+1)
         self.appproc = self.applist[self.awneu]
         self.apppid = self.svc
+        self.dein = " de"
         self.update_btn()
 
     def starten(self):
@@ -364,6 +380,13 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             # self.status.setText(self.s.stdout)
             self.update_btn()
         self.i = self.i + 1
+        self.ii = self.ii + 1
+        if self.ii >= 100:
+            self.ii = 0
+        if self.ii <= 50:
+            self.statusrun.move(200 + self.ii * 7, 580)
+        else:
+            self.statusrun.move(900 - self.ii * 7, 580)
         self.stimes.setValue(int(self.i))
 
     def timerstartem(self):
