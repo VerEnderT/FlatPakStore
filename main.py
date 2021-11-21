@@ -11,6 +11,9 @@ from PyQt5.QtCore import *
 class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
     def __init__(self):
         super().__init__()
+        self.appproc = []
+        self.apppid = []
+        self.svc = ""
         self.count = 0
         self.btn_app = QPushButton(self)
         self.btn_cat = QPushButton(self)
@@ -31,7 +34,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.beschreibung = []
         self.appcom = []
         self.yt1 = "http://www.youtube.com/embed/"
-        self.yt2 = "?autoplay=1&showinfo=0&loop=1&playlist="
+        self.yt2 = "?autoplay=1&allowfullscreeen=1&showinfo=0&loop=1&playlist="
         self.fileurl = self.yt1 + "ef9vYcuEDL4" + self.yt2 + "ef9vYcuEDL4"
         self.cpath = os.path.dirname(os.path.abspath(__file__))
         self.catseinlesen()
@@ -116,7 +119,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.btext = QTextEdit(self)
         self.btext.setReadOnly(True)
         self.btext.setMinimumWidth(430)
-        self.btext.setMinimumHeight(250)
+        self.btext.setMinimumHeight(240)
         self.btext.setText(self.beschreibung[0])
         self.btext.move(170, 330)
         self.btext.setStyleSheet("background: rgba(0, 0, 0, 140); color: #ffffff;")
@@ -189,17 +192,14 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             "color: #ffffff;"
         )
 
-
-
         # Label Seitenanzeige
         self.pageshow = QLabel(self)
         self.pageshow.setFixedWidth(100)
         self.pageshow.setFixedHeight(20)
-        self.pageshow.setText("Seite: " + str(self.apppage+1) + " / "+ str(int(self.count / 10) + 1))
+        self.pageshow.setText("Seite: " + str(self.apppage+1) + " / " + str(int(self.count / 10) + 1))
         self.pageshow.move(50, 107)
         self.pageshow.setAlignment(Qt.AlignCenter)
-        self.pageshow.setStyleSheet("background: rgba(255, 255, 255, 30);" )
-
+        self.pageshow.setStyleSheet("background: rgba(255, 255, 255, 30);")
 
         # Seite zurück Button
         self.btn_pageminus = QPushButton(self)
@@ -219,7 +219,11 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.btn_pageplus.setMaximumHeight(20)
         self.btn_pageplus.setStyleSheet("font-size: 20px;padding-top: -5px;")
 
-
+        self.status = QLabel(self)
+        self.status.move(200, 575)
+        self.status.setText("Status: keine aktivitäten")
+        self.status.setStyleSheet("background: rgba(0, 0, 0, 200);")
+        self.status.setFixedSize(400, 20)
 
         self.appbtnmake()
         self.catbtnmake()
@@ -287,30 +291,54 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         s = subprocess.Popen(['flatpak', 'info', self.appcom[self.awneu]],
                              stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = s.communicate()
+
+        #print("\n" + str[self.appproc])
         if stderr.decode('utf-8') == "":
             self.btn_install.hide()
             self.btn_deinstall.show()
             self.btn_start.show()
             # print("ist installiert!")
         else:
+            count = 0
+            if self.apppid and self.appproc:
+                self.status.setText("Status: es wird installiert")
+                for i in self.apppid:
+                    print(i)
+                    print(self.appproc[count])
+                    service_check = subprocess.call(["ps", "-c", i])
+                    if service_check == 0 and self.appproc[count] == self.applist[self.awneu]:
+                        self.btn_install.setDisabled(True)
+                        self.btn_install.setText("wird installiert")
+                    else:
+                        self.btn_install.setText("Installieren")
+                        self.btn_install.setDisabled(False)
+                        if service_check != 0 and self.appid[count] == i:
+                            self.appproc.remove(count)
+                            self.appid.remove(count)
+                    count = count + 1
+            else:
+                self.status.setText("Status: keine aktivitäten")
             self.btn_install.show()
             self.btn_start.hide()
             self.btn_deinstall.hide()
 
     # noinspection PyUnusedLocal
     def installieren(self):
-        self.stAnzeige.setText("es wird installiert")
-        s = subprocess.Popen(['flatpak', 'install', self.appcom[self.awneu], '-y'])
-        # stdout, stderr = s.communicate()
-        # print(stdout.decode('utf-8'))
-        print("wird installiert")
+        self.status.setText("es wird installiert")
+        self.btn_install.setDisabled(True)
+        prozess1 = subprocess.Popen('flatpak install ' + self.appcom[self.awneu] + ' -y', shell=True)
+        self.status.setText(prozess1.stdout)
+        self.svc = str(int(prozess1.pid)+1)
+        self.appproc.append(self.applist[self.awneu])
+        self.apppid.append(self.svc)
         self.update_btn()
+        self.btn_install.setDisabled(False)
 
     # noinspection PyUnusedLocal
     def deinstallieren(self):
-        self.stAnzeige.setText("Es wird deinstalliert...")
+        self.status.setText("Es wird deinstalliert...")
         self.stAnzeige.show()
-        s = subprocess.run(['flatpak', 'uninstall', self.appcom[self.awneu], '-y'])
+        s = subprocess.Popen(['flatpak', 'uninstall', self.appcom[self.awneu], '-y'])
         # stdout, stderr =s.communicate()
         print("wird de-installiert")
         self.update_btn()
@@ -326,10 +354,11 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.update_btn()
 
     def timerEvent(self, e):
-        if self.i >= 100:
+        if self.i >= 10:
             # self.timer.stop()
             self.i = 0
-            # self.update_btn()
+            # self.status.setText(self.s.stdout)
+            self.update_btn()
         self.i = self.i + 1
         self.stimes.setValue(int(self.i))
 
@@ -381,10 +410,11 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.appmenge = count - 1
         file1.close()
 
-
 # ----------- Applist Buttons -----------------------
+
     def appbtnmake(self):
-        #print(self.appcategorie[self.appcselect])
+
+        # print(self.appcategorie[self.appcselect])
 
         self.btn_app0.close()
         self.btn_app1.close()
@@ -396,47 +426,56 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.btn_app7.close()
         self.btn_app8.close()
         self.btn_app9.close()
-
         self.btn_app0 = QPushButton(self)
-        self.btn_app0.move(50, 130 + 0 * 35)
+        self.btn_app0.move(40, 130 + 0 * 35)
         self.btn_app0.setObjectName("0")
         self.btn_app0.clicked.connect(self.awknopf)
         self.btn_app1 = QPushButton(self)
-        self.btn_app1.move(50, 130 + 1 * 35)
+        self.btn_app1.move(40, 130 + 1 * 35)
         self.btn_app1.setObjectName("1")
         self.btn_app1.clicked.connect(self.awknopf)
         self.btn_app2 = QPushButton(self)
-        self.btn_app2.move(50, 130 + 2 * 35)
+        self.btn_app2.move(40, 130 + 2 * 35)
         self.btn_app2.setObjectName("2")
         self.btn_app2.clicked.connect(self.awknopf)
         self.btn_app3 = QPushButton(self)
-        self.btn_app3.move(50, 130 + 3 * 35)
+        self.btn_app3.move(40, 130 + 3 * 35)
         self.btn_app3.setObjectName("3")
         self.btn_app3.clicked.connect(self.awknopf)
         self.btn_app4 = QPushButton(self)
-        self.btn_app4.move(50, 130 + 4 * 35)
+        self.btn_app4.move(40, 130 + 4 * 35)
         self.btn_app4.setObjectName("4")
         self.btn_app4.clicked.connect(self.awknopf)
         self.btn_app5 = QPushButton(self)
-        self.btn_app5.move(50, 130 + 5 * 35)
+        self.btn_app5.move(40, 130 + 5 * 35)
         self.btn_app5.setObjectName("5")
         self.btn_app5.clicked.connect(self.awknopf)
         self.btn_app6 = QPushButton(self)
-        self.btn_app6.move(50, 130 + 6 * 35)
+        self.btn_app6.move(40, 130 + 6 * 35)
         self.btn_app6.setObjectName("6")
         self.btn_app6.clicked.connect(self.awknopf)
         self.btn_app7 = QPushButton(self)
-        self.btn_app7.move(50, 130 + 7 * 35)
+        self.btn_app7.move(40, 130 + 7 * 35)
         self.btn_app7.setObjectName("7")
         self.btn_app7.clicked.connect(self.awknopf)
         self.btn_app8 = QPushButton(self)
-        self.btn_app8.move(50, 130 + 8 * 35)
+        self.btn_app8.move(40, 130 + 8 * 35)
         self.btn_app8.setObjectName("8")
         self.btn_app8.clicked.connect(self.awknopf)
         self.btn_app9 = QPushButton(self)
-        self.btn_app9.move(50, 130 + 9 * 35)
+        self.btn_app9.move(40, 130 + 9 * 35)
         self.btn_app9.setObjectName("9")
         self.btn_app9.clicked.connect(self.awknopf)
+        self.btn_app0.setFixedWidth(120)
+        self.btn_app1.setFixedWidth(120)
+        self.btn_app2.setFixedWidth(120)
+        self.btn_app3.setFixedWidth(120)
+        self.btn_app4.setFixedWidth(120)
+        self.btn_app5.setFixedWidth(120)
+        self.btn_app6.setFixedWidth(120)
+        self.btn_app7.setFixedWidth(120)
+        self.btn_app8.setFixedWidth(120)
+        self.btn_app9.setFixedWidth(120)
 
 # ----- Liste neu beschreiben -------------------------
         self.apppage = int(self.awneu/10)

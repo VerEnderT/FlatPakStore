@@ -32,7 +32,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.beschreibung = []
         self.appcom = []
         self.yt1 = "http://www.youtube.com/embed/"
-        self.yt2 = "?autoplay=1&showinfo=0&loop=1&playlist="
+        self.yt2 = "?autoplay=1&allowfullscreeen=1&showinfo=0&loop=1&playlist="
         self.fileurl = self.yt1 + "ef9vYcuEDL4" + self.yt2 + "ef9vYcuEDL4"
         self.cpath = os.path.dirname(os.path.abspath(__file__))
         self.catseinlesen()
@@ -50,6 +50,16 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.btn_app7 = QPushButton(self)
         self.btn_app8 = QPushButton(self)
         self.btn_app9 = QPushButton(self)
+        self.btn_app0.setStyleSheet("font-size: 8px;")
+        self.btn_app1.setStyleSheet("font-size: 8px;")
+        self.btn_app2.setStyleSheet("font-size: 8px;")
+        self.btn_app3.setStyleSheet("font-size: 8px;")
+        self.btn_app4.setStyleSheet("font-size: 8px;")
+        self.btn_app5.setStyleSheet("font-size: 8px;")
+        self.btn_app6.setStyleSheet("font-size: 8px;")
+        self.btn_app7.setStyleSheet("font-size: 8px;")
+        self.btn_app8.setStyleSheet("font-size: 8px;")
+        self.btn_app9.setStyleSheet("font-size: 8px;")
 
 # ---------------------------------------------------------------------------
 
@@ -205,7 +215,6 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             "color: #ffffff;"
         )
 
-
         # Label Status
         self.stAnzeige = QLabel(self)
         self.stAnzeige.setMinimumWidth(150)
@@ -222,17 +231,14 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
             "color: #ffffff;"
         )
 
-
-
         # Label Seitenanzeige
         self.pageshow = QLabel(self)
         self.pageshow.setFixedWidth(100)
         self.pageshow.setFixedHeight(20)
-        self.pageshow.setText("Seite: " + str(self.apppage+1) + " / "+ str(int(self.count / 10) + 1))
+        self.pageshow.setText("Seite: " + str(self.apppage+1) + " / " + str(int(self.count / 10) + 1))
         self.pageshow.move(50, 107)
         self.pageshow.setAlignment(Qt.AlignCenter)
-        self.pageshow.setStyleSheet("background: rgba(255, 255, 255, 30);" )
-
+        self.pageshow.setStyleSheet("background: rgba(255, 255, 255, 30);")
 
         # Seite zurück Button
         self.btn_pageminus = QPushButton(self)
@@ -251,8 +257,6 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.btn_pageplus.setMaximumWidth(20)
         self.btn_pageplus.setMaximumHeight(20)
         self.btn_pageplus.setStyleSheet("font-size: 20px;padding-top: -5px;")
-
-
 
         self.appbtnmake()
         self.catbtnmake()
@@ -403,14 +407,9 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         # catpath = "test.data"
         print(catpath)
         file1 = open(catpath, 'w')
-        # self.applist.clear()
-        # self.coverpm.clear()
-        # self.videoadr.clear()
-        # self.beschreibung.clear()
-        # self.appcom.clear()
         count = 0
         for i in self.applist:
-            text = self.applist[count]+"\n"
+            text = i + "\n"
             file1.write(text)
             print("Line{}: {}".format(count, text))
 
@@ -438,8 +437,6 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
 # -------------- Applist Buttons ------------------------------------------------
 
     def appbtnmake(self):
-        #print(self.appcategorie[self.appcselect])
-
         self.btn_app0.close()
         self.btn_app1.close()
         self.btn_app2.close()
@@ -451,45 +448,55 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.btn_app8.close()
         self.btn_app9.close()
         self.btn_app0 = QPushButton(self)
-        self.btn_app0.move(50, 130 + 0 * 35)
+        self.btn_app0.move(40, 130 + 0 * 35)
         self.btn_app0.setObjectName("0")
         self.btn_app0.clicked.connect(self.awknopf)
         self.btn_app1 = QPushButton(self)
-        self.btn_app1.move(50, 130 + 1 * 35)
+        self.btn_app1.move(40, 130 + 1 * 35)
         self.btn_app1.setObjectName("1")
         self.btn_app1.clicked.connect(self.awknopf)
         self.btn_app2 = QPushButton(self)
-        self.btn_app2.move(50, 130 + 2 * 35)
+        self.btn_app2.move(40, 130 + 2 * 35)
         self.btn_app2.setObjectName("2")
         self.btn_app2.clicked.connect(self.awknopf)
         self.btn_app3 = QPushButton(self)
-        self.btn_app3.move(50, 130 + 3 * 35)
+        self.btn_app3.move(40, 130 + 3 * 35)
         self.btn_app3.setObjectName("3")
         self.btn_app3.clicked.connect(self.awknopf)
         self.btn_app4 = QPushButton(self)
-        self.btn_app4.move(50, 130 + 4 * 35)
+        self.btn_app4.move(40, 130 + 4 * 35)
         self.btn_app4.setObjectName("4")
         self.btn_app4.clicked.connect(self.awknopf)
         self.btn_app5 = QPushButton(self)
-        self.btn_app5.move(50, 130 + 5 * 35)
+        self.btn_app5.move(40, 130 + 5 * 35)
         self.btn_app5.setObjectName("5")
         self.btn_app5.clicked.connect(self.awknopf)
         self.btn_app6 = QPushButton(self)
-        self.btn_app6.move(50, 130 + 6 * 35)
+        self.btn_app6.move(40, 130 + 6 * 35)
         self.btn_app6.setObjectName("6")
         self.btn_app6.clicked.connect(self.awknopf)
         self.btn_app7 = QPushButton(self)
-        self.btn_app7.move(50, 130 + 7 * 35)
+        self.btn_app7.move(40, 130 + 7 * 35)
         self.btn_app7.setObjectName("7")
         self.btn_app7.clicked.connect(self.awknopf)
         self.btn_app8 = QPushButton(self)
-        self.btn_app8.move(50, 130 + 8 * 35)
+        self.btn_app8.move(40, 130 + 8 * 35)
         self.btn_app8.setObjectName("8")
         self.btn_app8.clicked.connect(self.awknopf)
         self.btn_app9 = QPushButton(self)
-        self.btn_app9.move(50, 130 + 9 * 35)
+        self.btn_app9.move(40, 130 + 9 * 35)
         self.btn_app9.setObjectName("9")
         self.btn_app9.clicked.connect(self.awknopf)
+        self.btn_app0.setFixedWidth(120)
+        self.btn_app1.setFixedWidth(120)
+        self.btn_app2.setFixedWidth(120)
+        self.btn_app3.setFixedWidth(120)
+        self.btn_app4.setFixedWidth(120)
+        self.btn_app5.setFixedWidth(120)
+        self.btn_app6.setFixedWidth(120)
+        self.btn_app7.setFixedWidth(120)
+        self.btn_app8.setFixedWidth(120)
+        self.btn_app9.setFixedWidth(120)
 
 # ----- Liste neu beschreiben -------------------------
         self.apppage = int(self.awneu/10)
