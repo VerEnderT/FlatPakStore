@@ -11,8 +11,8 @@ from PyQt5.QtCore import *
 class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
     def __init__(self):
         super().__init__()
-        self.appproc = []
-        self.apppid = []
+        self.appproc = ""
+        self.apppid = ""
         self.svc = ""
         self.count = 0
         self.btn_app = QPushButton(self)
@@ -222,6 +222,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.status = QLabel(self)
         self.status.move(200, 575)
         self.status.setText("Status: keine aktivitäten")
+        self.status.setAlignment(Qt.AlignCenter)
         self.status.setStyleSheet("background: rgba(0, 0, 0, 200);")
         self.status.setFixedSize(400, 20)
 
@@ -288,36 +289,40 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.update_btn()
 
     def update_btn(self):
+        if self.appproc != "" and self.apppid != "":
+            i = str(self.apppid)
+            service_check = subprocess.call(["ps", "-c", i])
+            if service_check == 0:
+                # programminstallation läuft noch
+                self.status.setText("Status: " + self.appproc + "wird de/installiert")
+                self.btn_install.setDisabled(True)
+                self.btn_install.setText("laüft bereits")
+                self.btn_deinstall.setDisabled(True)
+                self.btn_deinstall.setText("läuft bereits")
+                self.btn_start.setDisabled(True)
+                self.btn_start.setText("Bitte warten")
+            else:
+                # programm de/installation wurde beendet
+                self.appproc = ""
+                self.apppid = ""
+                self.btn_install.setDisabled(False)
+                self.btn_install.setText("Installieren")
+                self.btn_deinstall.setDisabled(False)
+                self.btn_deinstall.setText("De-Installierne")
+                self.btn_start.setDisabled(False)
+                self.btn_start.setText("Starten")
+
+        else:
+            self.status.setText("Status: keine aktivitäten")
+
         s = subprocess.Popen(['flatpak', 'info', self.appcom[self.awneu]],
                              stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = s.communicate()
-
-        #print("\n" + str[self.appproc])
         if stderr.decode('utf-8') == "":
             self.btn_install.hide()
             self.btn_deinstall.show()
             self.btn_start.show()
-            # print("ist installiert!")
         else:
-            count = 0
-            if self.apppid and self.appproc:
-                self.status.setText("Status: es wird installiert")
-                for i in self.apppid:
-                    print(i)
-                    print(self.appproc[count])
-                    service_check = subprocess.call(["ps", "-c", i])
-                    if service_check == 0 and self.appproc[count] == self.applist[self.awneu]:
-                        self.btn_install.setDisabled(True)
-                        self.btn_install.setText("wird installiert")
-                    else:
-                        self.btn_install.setText("Installieren")
-                        self.btn_install.setDisabled(False)
-                        if service_check != 0 and self.appid[count] == i:
-                            self.appproc.remove(count)
-                            self.appid.remove(count)
-                    count = count + 1
-            else:
-                self.status.setText("Status: keine aktivitäten")
             self.btn_install.show()
             self.btn_start.hide()
             self.btn_deinstall.hide()
@@ -327,20 +332,19 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.status.setText("es wird installiert")
         self.btn_install.setDisabled(True)
         prozess1 = subprocess.Popen('flatpak install ' + self.appcom[self.awneu] + ' -y', shell=True)
-        self.status.setText(prozess1.stdout)
         self.svc = str(int(prozess1.pid)+1)
-        self.appproc.append(self.applist[self.awneu])
-        self.apppid.append(self.svc)
+        self.appproc = self.applist[self.awneu]
+        self.apppid = self.svc
         self.update_btn()
-        self.btn_install.setDisabled(False)
 
     # noinspection PyUnusedLocal
     def deinstallieren(self):
         self.status.setText("Es wird deinstalliert...")
         self.stAnzeige.show()
-        s = subprocess.Popen(['flatpak', 'uninstall', self.appcom[self.awneu], '-y'])
-        # stdout, stderr =s.communicate()
-        print("wird de-installiert")
+        prozess1 = subprocess.Popen(['flatpak', 'uninstall', self.appcom[self.awneu], '-y'])
+        self.svc = str(int(prozess1.pid)+1)
+        self.appproc = self.applist[self.awneu]
+        self.apppid = self.svc
         self.update_btn()
 
     def starten(self):
