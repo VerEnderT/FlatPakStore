@@ -266,7 +266,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
 
         # konfiguration Fenster und zeigen
         self.setGeometry(0 + 50, 50, 1000, 600)  # x-pos, y-pos, breite, höhe
-        self.setWindowTitle("VerFlatpakT")  # Title name
+        self.setWindowTitle("VerFlatpakT - Editor")  # Title name
         self.setWindowIcon(QIcon(self.cpath + "/VerLinuxT-logo.png"))  # Datei für das logo des programms
         self.setFixedSize(1000, 600)  # fixe größe einstellen
         self.show()  # Fenster anzeigen
