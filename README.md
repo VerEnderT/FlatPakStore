@@ -1,26 +1,23 @@
 # FlatPakStore
 Neuer Flatpak Store in Deutsch
 
-![Flatpakstore211118](https://user-images.githubusercontent.com/53666253/142505689-834dc41f-dded-4efa-8d02-9e33f55c5ce8.png)
-
-
+![FlatPakStore](https://user-images.githubusercontent.com/53666253/142838600-44dbd182-d08d-45e4-80c0-31567a43d7c2.png)
 
 mit Videos zu den Apps direkt aus youtube
 
+
 .
 
-to do ...
 
-installations abfrage -- Erledigt
+Der Editor ist nun auch fertig !
 
-installations prozess --- muss noch verschönert werden. funktioniert aber.
+![FlatPakStoreEditor](https://user-images.githubusercontent.com/53666253/142839241-b67b3d2f-bc55-4fa5-99e4-356ef7906f51.png)
 
-Bilder aus dem internet einbinden ohne speicher in der app zu belasten. --- vielleicht 
 
-kategorien --- sind eingebaut !
 
-Anordnung und styling verbessern
+Bitte um etwas verständnis wenn der Code nocht etwas unsauber oder mit Fehlern ist.
+Ich bin noch recht neu beim programmieren. 
 
-code optimieren
 
 ![VerLinuxT-logo](https://user-images.githubusercontent.com/53666253/142251686-5353756f-8290-4e23-8d12-ce0daeae6377.png)
+
