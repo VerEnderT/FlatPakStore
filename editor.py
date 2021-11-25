@@ -199,7 +199,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
 
         # Cover ändern
         self.btn_cedit = QPushButton(self)
-        self.btn_cedit.setText("ämderm")
+        self.btn_cedit.setText("änderm")
         self.btn_cedit.move(725, 50)
         self.btn_cedit.clicked.connect(self.coveredit)
         self.btn_cedit.setMinimumWidth(150)
