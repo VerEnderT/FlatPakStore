@@ -116,7 +116,6 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.btn_addApp.setMaximumHeight(20)
         self.btn_addApp.setText("+")
         self.btn_addApp.clicked.connect(self.addapp)
-        # self.btn_addApp.setIcon(self.style().standardIcon(getattr(QStyle, "SP_FileDialogNewFolder")))
         self.btn_addApp.move(5, 107)
         self.btn_addApp.setStyleSheet("font-size: 20px;padding-top: -5px;")
 
@@ -125,7 +124,6 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.btn_addcat.setMaximumWidth(20)
         self.btn_addcat.setMaximumHeight(20)
         self.btn_addcat.setText("+")
-        # self.btn_addApp.setIcon(self.style().standardIcon(getattr(QStyle, "SP_FileDialogNewFolder")))
         self.btn_addcat.move(10, 37)
         self.btn_addcat.setStyleSheet("font-size: 20px;padding-top: -5px;")
 
