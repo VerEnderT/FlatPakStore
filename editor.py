@@ -257,7 +257,7 @@ class qFenster(QMainWindow):   # QMainWindow oder Qwidget für menuebars
         self.catbtnmake()
         self.appchange()
 
-# ---------------------------------------------------------------------------------------------
+        # ---------------------------------------------------------------------------------------------
 
         # konfiguration Fenster und zeigen
         self.setGeometry(0 + 50, 50, 1000, 600)  # x-pos, y-pos, breite, höhe
